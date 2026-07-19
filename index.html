@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Math Race ⚡</title>
+<link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Baloo+2:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script>
+// Aplica reduce-motion ANTES de que el splash empiece a animar (main.js recién
+// lo hace on load, muy tarde para el dragón del splash). document.body todavía
+// no existe acá -> se marca en <html>, que css/style.css también contempla.
+try {
+  if (localStorage.getItem('a11y_reduceMotion') === '1') {
+    document.documentElement.classList.add('a11y-reduce-motion');
+  }
+} catch (e) {}
+</script>
+<script>
+(function(){
+  // Barra de carga en 2 tramos: primero un "crawl" a ritmo fijo (lento a
+  // propósito, para que se note) hasta 90%; el último tramo (90%→100%) recién
+  // se dispara cuando la carga real terminó — nunca miente sobre el estado,
+  // pero tampoco pasa instantánea aunque los assets carguen en milisegundos.
+  var PHASE1_MS = 1400, PHASE1_CAP = 90, PHASE2_MS = 300;
+  var pct = 0, phase1Done = false, realDone = false, finishing = false, onDone = null, startTs = null;
+
+  window.__splashTotal = 14; // 13 <script src> + fonts.ready (informativo, no maneja el %)
+  window.__splashLoaded = 0;
+  window.__splashTick = function(){
+    window.__splashLoaded = Math.min(window.__splashTotal, window.__splashLoaded + 1);
+  };
+
+  function paint(){
+    var bar = document.getElementById('splashBarFill');
+    var txt = document.getElementById('splashPct');
+    if (bar) bar.style.width = pct + '%';
+    if (txt) txt.textContent = Math.round(pct) + '%';
+  }
+
+  // setTimeout en vez de requestAnimationFrame: rAF se pausa cuando la
+  // pestaña queda en background, y esta barra debe seguir avanzando igual.
+  function animateTo(target, duration, cb){
+    var from = pct, start = Date.now();
+    function step(){
+      var t = Math.min(1, (Date.now() - start) / duration);
+      var eased = 1 - Math.pow(1 - t, 3);
+      pct = from + (target - from) * eased;
+      paint();
+      if (t < 1) setTimeout(step, 16);
+      else { pct = target; paint(); if (cb) cb(); }
+    }
+    step();
+  }
+
+  function tryFinish(){
+    if (realDone && phase1Done && !finishing && pct < 100) {
+      finishing = true;
+      animateTo(100, PHASE2_MS, function(){ if (typeof onDone === 'function') onDone(); });
+    }
+  }
+
+  function phase1Step(){
+    if (!startTs) startTs = Date.now();
+    var t = Math.min(1, (Date.now() - startTs) / PHASE1_MS);
+    var eased = 1 - Math.pow(1 - t, 3);
+    pct = eased * PHASE1_CAP;
+    paint();
+    if (t < 1) setTimeout(phase1Step, 16);
+    else { phase1Done = true; tryFinish(); }
+  }
+  phase1Step();
+
+  // Llamado por main.js cuando el init real terminó de verdad.
+  window.__splashMarkReal = function(cb){
+    realDone = true;
+    onDone = cb;
+    tryFinish();
+  };
+
+  window.hideSplash = function(){
+    var el = document.getElementById('splashScreen');
+    if (!el || el.dataset.hidden) return;
+    el.dataset.hidden = '1';
+    el.classList.add('splash-hide');
+    setTimeout(function(){ el.remove(); }, 500);
+  };
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(window.__splashTick).catch(window.__splashTick);
+  } else {
+    window.__splashTick();
+  }
+})();
+</script>
+</head>
+<body>
+
+<!-- ══════ SPLASH SCREEN ══════ -->
+<div id="splashScreen">
+  <div class="splash-glow"></div>
+  <div class="splash-dragon">🐉</div>
+  <div class="splash-title">
+    <span class="splash-title-line1">MATH</span>
+    <span class="splash-title-line2">RACE</span>
+  </div>
+  <div class="home-subtitle">Resuelve · Compite · Gana</div>
+  <div class="splash-loading" id="splashLoading">
+    <div class="splash-bar-track">
+      <div class="splash-bar-fill" id="splashBarFill"></div>
+    </div>
+    <div class="splash-pct" id="splashPct">0%</div>
+  </div>
+  <div class="splash-picker" id="splashPicker"></div>
+  <div class="profe-credit splash-credit">
+    <span class="profe-dot">✦</span>
+    <span class="profe-text">Creado por <strong>ProfeD.</strong></span>
+    <span class="profe-dot">✦</span>
+  </div>
+</div>
+
+<!-- ══════ HOME SCREEN ══════ -->
+<div class="screen active" id="homeScreen">
+  <div class="home-particles" id="particleContainer"></div>
+
+  <!-- Floating sticker orbs (decoration) -->
+  <div class="home-sticker-ring" aria-hidden="true">
+    <span class="hs s1">🚀</span>
+    <span class="hs s2">⭐</span>
+    <span class="hs s3">🌈</span>
+    <span class="hs s4">🎯</span>
+    <span class="hs s5">💎</span>
+    <span class="hs s6">🔥</span>
+    <span class="hs s7">✨</span>
+    <span class="hs s8">🎉</span>
+  </div>
+
+  <!-- Hero -->
+  <div class="home-hero">
+    <div class="home-badge">⚡ NUEVA TEMPORADA</div>
+    <div class="home-title-wrap">
+      <div class="home-title-line1">MATH</div>
+      <div class="home-title-line2">RACE</div>
+    </div>
+    <div class="home-subtitle">Resuelve · Compite · Gana</div>
+    <div class="profile-pill" onclick="playClick();showProfileScreen()">👤 <span id="activeProfileName">Elegir jugador</span></div>
+  </div>
+
+  <!-- Divider -->
+  <div class="home-divider">
+    <div class="home-divider-line"></div>
+    <span class="home-divider-star">✦</span>
+    <div class="home-divider-line"></div>
+  </div>
+
+  <!-- Panel -->
+  <div class="home-panel">
+    <button class="menu-btn btn-ai" onclick="playClick();showStickerPick('ai')">
+      <span class="btn-icon">🤖</span>
+      <span class="btn-text">
+        <span class="btn-label">Carrera vs IA</span>
+        <span class="btn-sub">10 niveles · Elige tu corredor</span>
+      </span>
+    </button>
+    <button class="menu-btn btn-human" onclick="playClick();showStickerPick('human')">
+      <span class="btn-icon">👥</span>
+      <span class="btn-text">
+        <span class="btn-label">Carrera vs Amigos</span>
+        <span class="btn-sub">2 – 4 jugadores · Elige stickers</span>
+      </span>
+    </button>
+    <button class="menu-btn btn-continue" onclick="playClick();showContinue()">
+      <span class="btn-icon">💾</span>
+      <span class="btn-text">
+        <span class="btn-label">Continuar Partida</span>
+        <span class="btn-sub">Retoma donde dejaste</span>
+      </span>
+    </button>
+    <div class="menu-row">
+      <button class="menu-btn-small" onclick="playClick();showAchievements()">
+        <span class="icon">🏆</span>Logros
+      </button>
+      <button class="menu-btn-small" onclick="playClick();showInfo()">
+        <span class="icon">📚</span>Info Docente
+      </button>
+    </div>
+    <div class="menu-row">
+      <button class="menu-btn-small" onclick="playClick();startPractice()">
+        <span class="icon">🎯</span>Practicar
+      </button>
+      <button class="menu-btn-small" onclick="playClick();startDailyChallenge()">
+        <span class="icon">📅</span>Desafío Diario
+      </button>
+    </div>
+    <div class="profe-credit">
+      <span class="profe-dot">✦</span>
+      <span class="profe-text">Creado por <strong>ProfeD.</strong></span>
+      <span class="profe-dot">✦</span>
+    </div>
+  </div>
+</div>
+
+<!-- Music toggle + Accesibilidad (global, fixed) -->
+<button class="music-toggle is-music-btn" id="musicToggle" onclick="toggleMusic()" title="Música">🎵</button>
+<button class="music-toggle" id="a11yToggle" style="right:62px;" onclick="showA11yPanel()" title="Accesibilidad">⚙️</button>
+
+<!-- ══════ PANEL DE ACCESIBILIDAD ══════ -->
+<div class="modal-overlay" id="a11yModal">
+  <div class="modal-box" style="padding:24px 20px;text-align:left;">
+    <div class="modal-title" style="font-size:1.3rem;text-align:center;">⚙️ Accesibilidad</div>
+    <div style="display:flex;flex-direction:column;gap:14px;margin-top:10px;">
+      <label style="display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:800;font-size:0.9rem;">
+        Alto contraste
+        <input type="checkbox" id="a11yContrast" onchange="toggleA11y('contrast', this.checked)">
+      </label>
+      <label style="display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:800;font-size:0.9rem;">
+        Reducir animaciones
+        <input type="checkbox" id="a11yMotion" onchange="toggleA11y('reduceMotion', this.checked)">
+      </label>
+      <label style="display:flex;flex-direction:column;gap:6px;font-weight:800;font-size:0.9rem;">
+        Tamaño de texto
+        <input type="range" id="a11yFontSize" min="0" max="2" step="1" value="0" oninput="setA11yFontSize(this.value)">
+      </label>
+      <label style="display:flex;flex-direction:column;gap:6px;font-weight:800;font-size:0.9rem;">
+        🎵 Volumen música
+        <input type="range" id="musicVolumeRange" min="0" max="100" step="10" value="80" oninput="setMusicVolume(this.value)">
+      </label>
+      <label style="display:flex;flex-direction:column;gap:6px;font-weight:800;font-size:0.9rem;">
+        🔊 Volumen efectos
+        <input type="range" id="sfxVolumeRange" min="0" max="100" step="10" value="80" oninput="setSfxVolume(this.value)">
+      </label>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-secondary" onclick="hideA11yPanel()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ PASAR DISPOSITIVO (vs Amigos) ══════ -->
+<div class="modal-overlay" id="passDeviceModal">
+  <div class="modal-box" style="padding:30px 22px;">
+    <div class="modal-emoji" id="passDeviceEmoji">🐉</div>
+    <div class="modal-title" style="font-size:1.15rem;margin-bottom:6px;">Pasále el dispositivo a</div>
+    <div style="font-size:1.7rem;font-weight:900;margin-bottom:18px;" id="passDeviceName">Jugador</div>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-primary" onclick="confirmPassDevice()">📱 ¡Listo, es mi turno!</button>
+    </div>
+  </div>
+</div>
+
+<!-- Floating feedback (overlays the race track) -->
+<div id="floatingFeedback"></div>
+
+<!-- ══════ GAME SCREEN ══════ -->
+<div class="screen" id="gameScreen">
+  <div class="game-header">
+    <div class="level-badge" id="levelBadge">Nivel 1 / 10</div>
+    <div class="game-header-actions">
+      <button class="music-toggle header-icon is-music-btn" id="musicToggleGame" onclick="toggleMusic()" title="Música">🎵</button>
+      <button class="music-toggle header-icon" id="a11yToggleGame" onclick="showA11yPanel()" title="Accesibilidad">⚙️</button>
+      <button class="exit-btn" onclick="exitGame()">✕ Salir</button>
+    </div>
+  </div>
+  <div class="race-track-wrapper" id="raceTrack"></div>
+  <div class="challenge-zone" id="challengeZone"></div>
+</div>
+
+<!-- ══════ PANTALLA DE PERFILES ══════ -->
+<div class="screen" id="profileScreen">
+  <div class="sec-header">
+    <button class="back-btn" onclick="showScreen('homeScreen')">← Volver</button>
+    <div class="sec-title">👤 ¿Quién juega?</div>
+  </div>
+  <div class="secondary-screen-inner" id="profileScreenBody"></div>
+</div>
+
+<!-- ══════ STICKER PICK SCREEN ══════ -->
+<div class="screen" id="stickerPickScreen">
+  <div class="sec-header">
+    <button class="back-btn" onclick="showScreen('homeScreen')">← Volver</button>
+    <div class="sec-title" id="stickerPickTitle">🎮 Elige tu corredor</div>
+  </div>
+  <div class="secondary-screen-inner" id="stickerPickBody"></div>
+</div>
+
+<!-- ══════ INFO SCREEN ══════ -->
+<div class="screen" id="infoScreen">
+  <div class="sec-header">
+    <button class="back-btn" onclick="showScreen('homeScreen')">← Volver</button>
+    <div class="sec-title">📚 Info Didáctica</div>
+  </div>
+  <div class="secondary-screen-inner">
+    <div class="info-card">
+      <h3>🎯 Objetivo</h3>
+      <p>Juego de gamificación para fortalecer el cálculo mental en primaria. Los niños resuelven sumas, restas, multiplicaciones y divisiones para hacer volar a su dragón y ganar la carrera.</p>
+    </div>
+    <div class="info-card">
+      <h3>🎮 Mecánicas</h3>
+      <ul>
+        <li><strong>Movimiento:</strong> Responde correctamente para avanzar</li>
+        <li><strong>Bola de Fuego:</strong> Atrasa a los rivales con una respuesta correcta</li>
+        <li><strong>Visual:</strong> Los puntos muestran la cantidad para ayudar a los más pequeños</li>
+        <li><strong>Comentarista IA:</strong> Frases dinámicas locales que reaccionan a cada jugada (sin internet)</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3>📊 Niveles de Dificultad</h3>
+      <p><strong>Niveles 1-6:</strong> Sumas y restas, números del 1 al 20</p>
+      <p><strong>Niveles 7-8:</strong> Se suma la tabla de multiplicar</p>
+      <p><strong>Niveles 9-10:</strong> Se suma la división exacta, hasta 100</p>
+    </div>
+    <div class="info-card">
+      <h3>🏫 En el Aula</h3>
+      <ul>
+        <li>1°-2°: Usar niveles 1-3</li>
+        <li>3°-4°: Niveles 4-7</li>
+        <li>5°-6°: Todos los niveles</li>
+        <li>Proyectar para competencias grupales</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3>🤖 Comentarista IA</h3>
+      <p>El juego incluye un <strong>comentarista inteligente</strong> con más de 30 frases diferentes que reacciona a cada respuesta, racha, bola de fuego y resultado de carrera — ¡funciona sin internet!</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ ACHIEVEMENTS SCREEN ══════ -->
+<div class="screen" id="achievementsScreen">
+  <div class="sec-header">
+    <button class="back-btn" onclick="showScreen('homeScreen')">← Volver</button>
+    <div class="sec-title">🏆 Tus Logros</div>
+  </div>
+  <div class="secondary-screen-inner">
+    <div class="achiev-grid" id="achievGrid"></div>
+  </div>
+</div>
+
+<!-- ══════ CONTINUE SCREEN ══════ -->
+<div class="screen" id="continueScreen">
+  <div class="sec-header">
+    <button class="back-btn" onclick="showScreen('homeScreen')">← Volver</button>
+    <div class="sec-title">💾 Partidas Guardadas</div>
+  </div>
+  <div class="secondary-screen-inner" id="continueContent">
+    <p style="color:var(--text-muted); text-align:center; margin-top:20px;">No hay partidas guardadas</p>
+  </div>
+</div>
+
+<!-- ══════ RESULT MODAL ══════ -->
+<div class="modal-overlay" id="resultModal">
+  <div class="modal-box">
+    <div class="modal-emoji" id="resultEmoji">🏆</div>
+    <div class="modal-title" id="resultTitle">¡Carrera!</div>
+    <div class="podium-list" id="podiumList"></div>
+    <div class="ai-response" id="resultAiComment">
+      <span class="ai-icon">🤖</span>
+      <span id="resultAiText">Cargando comentario...</span>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-primary" id="nextLevelBtn" onclick="nextLevel()" style="display:none">⚡ Siguiente Nivel</button>
+      <button class="modal-btn modal-btn-primary" onclick="returnHome()">🏠 Volver al Menú</button>
+      <button class="modal-btn modal-btn-secondary" id="restartBtn" onclick="restartSameLevel()">🔄 Repetir Carrera</button>
+      <button class="modal-btn modal-btn-secondary" onclick="shareResult()">📤 Compartir Resultado</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ EXIT MODAL ══════ -->
+<div class="modal-overlay" id="exitModal">
+  <div class="modal-box" style="padding:24px 20px;">
+    <div class="modal-emoji">🏁</div>
+    <div class="modal-title" style="font-size:1.4rem;">¿Salir de la carrera?</div>
+    <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:16px;">Tu progreso en esta carrera se perderá.</p>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-primary" onclick="exitConfirm()">Sí, salir</button>
+      <button class="modal-btn modal-btn-secondary" onclick="exitCancel()">Seguir jugando</button>
+    </div>
+  </div>
+</div>
+
+<!-- Orden de carga: utils/data primero (state.js depende de clamp/safeGetJSON
+     de utils.js); audio.js al final porque parchea (monkey-patch) funciones
+     definidas en los módulos anteriores. -->
+<script src="js/utils.js" onload="__splashTick()"></script>
+<script src="js/data.js" onload="__splashTick()"></script>
+<script src="js/profiles.js" onload="__splashTick()"></script>
+<script src="js/state.js" onload="__splashTick()"></script>
+<script src="js/navigation.js" onload="__splashTick()"></script>
+<script src="js/stickers.js" onload="__splashTick()"></script>
+<script src="js/race-track.js" onload="__splashTick()"></script>
+<script src="js/challenge.js" onload="__splashTick()"></script>
+<script src="js/actions.js" onload="__splashTick()"></script>
+<script src="js/results.js" onload="__splashTick()"></script>
+<script src="js/comments.js" onload="__splashTick()"></script>
+<script src="js/audio.js" onload="__splashTick()"></script>
+<script src="js/main.js" onload="__splashTick()"></script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').then(reg => {
+      // Si ya había un SW controlando la página y aparece uno nuevo esperando,
+      // avisar para que el usuario recargue y no quede con una versión vieja.
+      if (reg.waiting && navigator.serviceWorker.controller) {
+        notifyUpdateAvailable(reg);
+      }
+      reg.addEventListener('updatefound', () => {
+        const newWorker = reg.installing;
+        if (!newWorker) return;
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            notifyUpdateAvailable(reg);
+          }
+        });
+      });
+    }).catch(() => {});
+  });
+}
+
+function notifyUpdateAvailable(reg) {
+  if (typeof toast !== 'function') return;
+  toast('⬆️ Hay una versión nueva del juego — tocá para actualizar', 'ok');
+  const el = document.getElementById('toastEl');
+  if (el) {
+    el.style.cursor = 'pointer';
+    el.onclick = () => {
+      if (reg.waiting) reg.waiting.postMessage('skipWaiting');
+      window.location.reload();
+    };
+  }
+}
+navigator.serviceWorker && navigator.serviceWorker.addEventListener && navigator.serviceWorker.addEventListener('controllerchange', () => {
+  // Evita loops de recarga si el navegador dispara el evento más de una vez
+  if (!window._swReloaded) { window._swReloaded = true; }
+});
+</script>
+</body>
+</html>

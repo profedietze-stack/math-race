@@ -1,0 +1,8 @@
+{
+  "name": "math-race",
+  "private": true,
+  "description": "Math Race — juego educativo de cálculo mental (ProfeD.)",
+  "scripts": {
+    "test": "node --test tests/"
+  }
+}
