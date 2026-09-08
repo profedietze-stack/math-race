@@ -382,6 +382,9 @@ try {
 <!-- Orden de carga: utils/data primero (state.js depende de clamp/safeGetJSON
      de utils.js); audio.js al final porque parchea (monkey-patch) funciones
      definidas en los módulos anteriores. -->
+<!-- Primero de todos: si algo se rompe cargando los demas, ya esta escuchando.
+     No lleva __splashTick() a proposito, el contador cuenta los modulos del juego. -->
+<script src="js/errorBanner.js"></script>
 <script src="js/utils.js" onload="__splashTick()"></script>
 <script src="js/data.js" onload="__splashTick()"></script>
 <script src="js/profiles.js" onload="__splashTick()"></script>
