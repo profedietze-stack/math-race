@@ -3,7 +3,7 @@
 // Estrategia: Cache-first para assets, Network-first para nada
 // ============================================================
 
-const CACHE_NAME = 'math-race-v4';
+const CACHE_NAME = 'math-race-v5';
 
 // Recursos a pre-cachear en la instalación
 const PRECACHE = [
@@ -25,7 +25,7 @@ const PRECACHE = [
   './js/audio.js',
   './js/main.js',
   './manifest.json',
-  'https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Baloo+2:wght@400;700;800&display=swap',
+  'css/fuentes.css',
 ];
 
 // ── Install: pre-cachear el juego completo ──────────────────

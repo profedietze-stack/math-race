@@ -84,7 +84,7 @@ async function loadTone() {
   if (Tone) return;
   return new Promise((resolve) => {
     const s = document.createElement('script');
-    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js';
+    s.src = 'vendor/Tone.js';
     s.onload = () => { Tone = window.Tone; resolve(); };
     s.onerror = () => {
       // Sin internet la primera vez que se necesita música -> avisar una sola
