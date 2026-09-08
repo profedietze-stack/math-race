@@ -3,7 +3,20 @@
 // ═══════════════════════════════════════
 function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+// Fisher-Yates, el mismo que `sshuffle` pero con Math.random.
+//
+// Antes era `[...arr].sort(() => Math.random() - 0.5)`: un comparador
+// inconsistente que no reparte parejo y deja los elementos cerca de donde
+// estaban. Quedaba la rareza de que el Desafio Diario —que usa `sshuffle`—
+// mezclaba bien las respuestas y el modo normal no.
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
 // ── RNG seedeada (Desafío Diario: misma secuencia de preguntas para todos) ──
 function mulberry32(seed) {

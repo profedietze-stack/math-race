@@ -140,3 +140,45 @@ test('sfxVolumeMult: 100% es 1 (sin cambios), 0% es 0 (silencio)', () => {
   assert.equal(sfxVolumeMult(), 0);
   localStorage.clear();
 });
+
+test('shuffle: reparte parejo, no deja la respuesta correcta en el mismo lugar', () => {
+  // Antes shuffle usaba `sort(() => Math.random() - 0.5)`, un comparador
+  // inconsistente que deja los elementos cerca de donde estaban. En un
+  // multiple choice de cuatro eso se traduce en que la correcta cae en el
+  // primer boton mas seguido de lo que corresponde, y los chicos lo notan.
+  //
+  // Quedaba ademas la rareza de que el Desafio Diario mezclaba bien (usa
+  // sshuffle, que siempre fue Fisher-Yates) y el modo normal no.
+  const N = 20000;
+  const veces = [0, 0, 0, 0];
+  for (let i = 0; i < N; i++) veces[shuffle([0, 1, 2, 3]).indexOf(0)]++;
+  for (let pos = 0; pos < 4; pos++) {
+    const p = veces[pos] / N;
+    assert.ok(
+      p > 0.22 && p < 0.28,
+      `la primera opcion cae en la posicion ${pos} el ${(p * 100).toFixed(1)}% de las veces`,
+    );
+  }
+});
+
+test('shuffle: no pierde ni duplica elementos, y no toca el original', () => {
+  const original = ['a', 'b', 'c', 'd', 'e'];
+  for (let i = 0; i < 300; i++) {
+    const mezclado = shuffle(original);
+    assert.deepEqual([...mezclado].sort(), [...original].sort());
+  }
+  assert.deepEqual(original, ['a', 'b', 'c', 'd', 'e']);
+});
+
+test('shuffle y sshuffle reparten igual de bien', () => {
+  // El diario y el modo normal tienen que ofrecer la misma dificultad: si uno
+  // reparte mejor que el otro, el puntaje no es comparable.
+  const rnd = mulberry32(12345);
+  const N = 20000;
+  const conSemilla = [0, 0, 0, 0];
+  for (let i = 0; i < N; i++) conSemilla[sshuffle(rnd, [0, 1, 2, 3]).indexOf(0)]++;
+  for (let pos = 0; pos < 4; pos++) {
+    const p = conSemilla[pos] / N;
+    assert.ok(p > 0.22 && p < 0.28, `sshuffle: posicion ${pos} al ${(p * 100).toFixed(1)}%`);
+  }
+});
