@@ -3,6 +3,6 @@
   "private": true,
   "description": "Math Race — juego educativo de cálculo mental (ProfeD.)",
   "scripts": {
-    "test": "node --test tests/"
+    "test": "node --test \"tests/*.test.js\""
   }
 }
