@@ -94,7 +94,7 @@ function proceedToNextChallenge(delay = 0) {
 
 // ── Exports condicionales para tests en Node (no afecta al navegador) ──
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { generateChallenge, buildRemovalDotGrid, buildGroupsDotGrid };
+  module.exports = { generateChallenge, buildRemovalDotGrid, buildGroupsDotGrid, buildSharingDotGrid };
 }
 
 function renderChallenge(isFireball = false) {
@@ -128,6 +128,13 @@ function renderChallenge(isFireball = false) {
           <div class="subtraction-caption">✕ quitamos ${ch.n2}</div>
         </div>
         <div class="math-operator">−</div>
+        <div class="big-number num-b">${ch.n2}</div>
+      ` : ch.op === '÷' ? `
+        <div class="num-block">
+          <div class="dot-grid">${buildSharingDotGrid(ch.n1, ch.n2)}</div>
+          <div class="subtraction-caption" style="color:var(--text-muted);">${ch.n1} repartidos en ${ch.n2} grupos iguales</div>
+        </div>
+        <div class="math-operator">÷</div>
         <div class="big-number num-b">${ch.n2}</div>
       ` : ch.op === '×' ? `
         <div class="num-block">
@@ -206,6 +213,46 @@ function buildRemovalDotGrid(n1, n2) {
   for (let i = 0; i < keepShow; i++) html += `<div class="dot dot-blue"></div>`;
   for (let i = 0; i < removeShow; i++) html += `<div class="dot dot-removed"></div>`;
   if (n1 > 20) html += `<div class="dot-plus dot" style="width:auto;padding:0 3px;font-size:0.55rem;">+${n1-20}</div>`;
+  html += '</div>';
+  return html;
+}
+
+// Visual de división: n1 puntos REPARTIDOS en n2 grupos iguales.
+//
+// Antes la división caía en el `else` del template, o sea el mismo dibujo que
+// la suma: n1 puntos, un signo, n2 puntos. Eso muestra dos cantidades sueltas,
+// que es justo lo que el dibujo de la multiplicación evita a propósito. En
+// «12 ÷ 3» los tres no son tres cosas: son en cuántas partes se reparte.
+//
+// Se dibujan los grupos, así el chico cuenta cuántos le tocan a cada uno y esa
+// cuenta es la respuesta. Sirve igual para las dos formas en que el juego
+// enuncia la división —repartir entre n2, o armar grupos de n2— porque el
+// número que sale es el mismo.
+function buildSharingDotGrid(n1, n2) {
+  const total = Math.max(0, Math.floor(n1) || 0);
+  const grupos = Math.max(0, Math.floor(n2) || 0);
+  if (grupos === 0) return buildDotGrid(total, 'dot-blue');
+
+  // Se recorta la CANTIDAD de grupos, nunca lo que hay dentro de uno. El chico
+  // tiene que poder contar un grupo entero: ese número es la respuesta. Cortar
+  // los puntos de cada grupo dejaba seis montones con un «+1» colgando, que es
+  // justo lo que no se puede contar. El cociente nunca pasa de 12.
+  const porGrupo = Math.floor(total / grupos);
+  const gruposShow = Math.min(grupos, 6);
+  const porGrupoShow = Math.min(porGrupo, 12);
+
+  let html = '<div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:240px;">';
+  for (let g = 0; g < gruposShow; g++) {
+    html += '<div class="sharing-group" style="display:flex;flex-wrap:wrap;gap:3px;padding:3px 4px;border:1px dashed rgba(255,255,255,0.25);border-radius:7px;max-width:60px;justify-content:center;">';
+    for (let d = 0; d < porGrupoShow; d++) html += `<div class="dot dot-blue"></div>`;
+    if (porGrupo > porGrupoShow) {
+      html += `<span class="dot-plus dot" style="width:auto;padding:0 3px;font-size:0.5rem;">+${porGrupo - porGrupoShow}</span>`;
+    }
+    html += '</div>';
+  }
+  if (grupos > gruposShow) {
+    html += `<div style="align-self:center;font-size:0.55rem;color:var(--text-muted);font-weight:800;">+${grupos - gruposShow} grupos más</div>`;
+  }
   html += '</div>';
   return html;
 }
