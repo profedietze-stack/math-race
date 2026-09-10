@@ -22,8 +22,9 @@ function doMove() {
 
   // Penalty scale: 0 errors = 20, 1 error = 10, 2 errors = 5, 3 errors = 0
   const advanceTable = [20, 10, 5, 0];
+  // Con tres errores `selectedAnswer` queda en '__blocked__', que no es la
+  // correcta: cae solo en el avance 0. No hace falta mirarlo aparte.
   const isCorrect = ch.selectedAnswer === ch.correct;
-  const isBlocked = ch.selectedAnswer === '__blocked__';
   const advance = isCorrect ? advanceTable[Math.min(state.wrongStreak, 3)] : 0;
 
   state.positions[whoIdx] += advance;

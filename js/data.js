@@ -40,7 +40,7 @@ const LEVELS = [
 ];
 
 // Nivel fijo usado por el Desafío Diario (mismo para todos los jugadores)
-const DAILY_LEVEL_INDEX = 4; // LEVELS[4] = nivel 5, "Medio", solo +/-
+const DAILY_LEVEL_INDEX = 4; // LEVELS[4] = nivel 5, "Fácil" (1-15), solo +/-
 const DAILY_QUESTIONS = 10;
 
 const RACE_DISTANCE = 100;
