@@ -75,6 +75,28 @@ function recordRaceStats(opMisses, correctCount, totalCount) {
   recordDailyStatsLog(Number.isFinite(correctCount) ? correctCount : 0, Number.isFinite(totalCount) ? totalCount : 0);
 }
 
+/**
+ * Guarda las estadísticas de la carrera en curso, una sola vez.
+ *
+ * Se guardaban en tres lugares —al terminar una carrera, al terminar el
+ * Desafío Diario, y al salir sólo en modo práctica—, así que el alumno que
+ * jugaba veinte preguntas contra la IA y cerraba antes de llegar a los 100
+ * metros no dejaba rastro. En un aula esa es la situación normal: suena el
+ * timbre y treinta tablets se cierran a mitad de carrera.
+ *
+ * La marca `_statsGuardadas` evita el problema contrario: que una carrera que
+ * terminó sola y además se cierra con Salir cuente dos veces.
+ *
+ * Devuelve si efectivamente guardó, para poder probarlo.
+ */
+function guardarEstadisticasDeCarrera() {
+  if (state._statsGuardadas) return false;
+  if (!(state.totalCount > 0)) return false; // entrar y salir sin contestar no es un día jugado
+  state._statsGuardadas = true;
+  recordRaceStats(state.opMisses, state.correctCount, state.totalCount);
+  return true;
+}
+
 function getStatsHistory() {
   return normalizeStats(safeGetJSON(pKey('statsHistory'), DEFAULT_STATS));
 }
@@ -124,7 +146,7 @@ if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     normalizeStats, DEFAULT_STATS, readSavedLevel,
     getUnlockedStickerIds, getStickerById,
-    recordRaceStats, getStatsHistory, getWeakestOp,
+    recordRaceStats, guardarEstadisticasDeCarrera, getStatsHistory, getWeakestOp,
     normalizeStatsLog, recordDailyStatsLog, getWeeklyStats,
   };
 }

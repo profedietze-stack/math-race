@@ -12,6 +12,7 @@ function launchGame() {
   state.difficultyBoost = 0;
   state.opMisses = {};
   state._wasLast = false;
+  state._statsGuardadas = false;
   renderTrack();
   updateLevelBadge();
   showScreen('gameScreen');

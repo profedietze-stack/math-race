@@ -67,7 +67,7 @@ function endRace(winnerIdx) {
 
   // Guardar estadísticas históricas (qué operación falla más, precisión acumulada)
   if (state.mode === 'ai' || state.mode === 'human') {
-    recordRaceStats(state.opMisses, state.correctCount, state.totalCount);
+    guardarEstadisticasDeCarrera();
   }
 
   // Haiku end-race comment
@@ -79,7 +79,7 @@ function endRace(winnerIdx) {
 // ═══════════════════════════════════════
 function endDailyChallenge() {
   state.gameActive = false;
-  recordRaceStats(state.opMisses, state.correctCount, state.totalCount);
+  guardarEstadisticasDeCarrera();
 
   const accuracy = state.totalCount > 0 ? Math.round((state.correctCount / state.totalCount) * 100) : 0;
   safeSetItem(pKey('dailyDate'), todayKey());
@@ -132,10 +132,10 @@ function exitGame() {
 }
 function exitConfirm() {
   document.getElementById('exitModal').classList.remove('active');
-  // Modo práctica no dispara endRace: guardar lo acumulado antes de salir
-  if (state.mode === 'practice' && state.totalCount > 0) {
-    recordRaceStats(state.opMisses, state.correctCount, state.totalCount);
-  }
+  // Salir a mitad de carrera no borra lo que el alumno respondió. Vale para
+  // todos los modos, no sólo para práctica: el modo práctica no dispara
+  // endRace nunca, pero una carrera vs IA abandonada tampoco.
+  guardarEstadisticasDeCarrera();
   showScreen('homeScreen');
 }
 function exitCancel() {
