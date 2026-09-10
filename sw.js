@@ -3,7 +3,7 @@
 // Estrategia: Cache-first para assets, Network-first para nada
 // ============================================================
 
-const CACHE_NAME = 'math-race-v6';
+const CACHE_NAME = 'math-race-v7';
 
 // Recursos a pre-cachear en la instalación
 const PRECACHE = [
@@ -25,7 +25,25 @@ const PRECACHE = [
   './js/audio.js',
   './js/main.js',
   './manifest.json',
-  'css/fuentes.css',
+  './css/fuentes.css',
+
+  // Tipografías: sólo los subconjuntos latinos, que es lo que el castellano
+  // necesita. Sin esto el juego se abría con la letra del sistema la primera
+  // vez que se usaba sin internet — no da error, simplemente se ve distinto de
+  // como el docente lo mostró en clase, y no hay forma de saber por qué.
+  './fonts/baloo-2-400-latin.woff2',
+  './fonts/baloo-2-700-latin.woff2',
+  './fonts/baloo-2-800-latin.woff2',
+  './fonts/nunito-400-latin.woff2',
+  './fonts/nunito-700-latin.woff2',
+  './fonts/nunito-800-latin.woff2',
+  './fonts/nunito-900-latin.woff2',
+
+  // Tone.js viaja con el juego desde que se sacaron los recursos de terceros.
+  // Se cargaba a demanda y sin precachear, así que la primera vez que hacía
+  // falta música sin internet salía «necesita internet la primera vez» — para
+  // un archivo que está en el mismo servidor del que salió el juego.
+  './vendor/Tone.js',
 ];
 
 // ── Install: pre-cachear el juego completo ──────────────────
@@ -90,7 +108,8 @@ self.addEventListener('fetch', event => {
         if (event.request.destination === 'document') {
           return caches.match('./index.html');
         }
-        // Para fuentes / Tone.js CDN: respuesta vacía (el juego sigue jugable)
+        // Cualquier otra cosa que no esté guardada: respuesta vacía en vez de
+        // un error de red, que el navegador muestra como pantalla rota.
         return new Response('', { status: 503 });
       });
     })
