@@ -8,7 +8,7 @@ function pickComment(bank, vars = {}) {
   return text;
 }
 
-function getHaikuComment(type, n1, op, n2, correct, streak, targetName = '') {
+function getHaikuComment(type, n1, op, n2, correct, streak, targetName = '', pista = '') {
   const aiText = document.getElementById('aiText');
   if (!aiText) return;
 
@@ -18,7 +18,7 @@ function getHaikuComment(type, n1, op, n2, correct, streak, targetName = '') {
       ? pickComment(COMMENTS.streak, { n: streak })
       : pickComment(COMMENTS.correct);
   } else if (type === 'incorrect') {
-    text = pickComment(COMMENTS.incorrect);
+    text = pista || pickComment(COMMENTS.incorrect);
   } else if (type === 'blocked') {
     text = pickComment(COMMENTS.blocked, { correct });
   } else if (type === 'fireball') {

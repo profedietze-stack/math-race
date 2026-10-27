@@ -40,9 +40,5 @@ for (let nivel = 1; nivel <= 10; nivel++) {
   });
 }
 
-test('los distractores siguen cerca de la correcta (a 8 o menos)', () => {
-  for (let i = 0; i < 4000; i++) {
-    const ch = generateChallenge(LEVELS[i % 10], i % 4, rand, pick, shuffle);
-    for (const a of ch.answers) assert.ok(Math.abs(a - ch.correct) <= 8, `${a} está lejos de ${ch.correct}`);
-  }
-});
+// La cercanía de los distractores (a 8 o menos, o un error típico) se prueba
+// en errores-tipicos.test.js.

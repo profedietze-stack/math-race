@@ -39,9 +39,25 @@ function generateChallenge(lv, boost, _rand, _pick, _shuffle) {
   for (let w = Math.max(0, correct - 8); w < correct; w++) debajo.push(w);
   for (let w = correct + 1; w <= correct + 8; w++) arriba.push(w);
   const cuantosDebajo = Math.min(_rand(0, 3), debajo.length);
+
+  // Un error típico (sumar en vez de restar, uno de más, una fila de más…)
+  // entre las opciones, la mayoría de las veces y nunca más de uno: si siempre
+  // hubiera un «±1», la correcta sería la que tiene vecinos a los dos lados.
+  // Se elige DESPUÉS de fijar cuántos van por debajo, entre los que caen del
+  // lado que todavía tiene lugar: así el rango de la correcta sigue parejo.
+  const elegidos = [];
+  if (_rand(1, 10) <= 8) {
+    const compatibles = erroresTipicos(op, n1, n2, correct)
+      .map(e => e.valor)
+      .filter(v => (v < correct && cuantosDebajo > 0) || (v > correct && cuantosDebajo < 3));
+    if (compatibles.length > 0) elegidos.push(_pick(compatibles));
+  }
+  const tipicoDebajo = elegidos.filter(v => v < correct).length;
+  const tipicoArriba = elegidos.length - tipicoDebajo;
   const wrongs = new Set([
-    ..._shuffle(debajo).slice(0, cuantosDebajo),
-    ..._shuffle(arriba).slice(0, 3 - cuantosDebajo),
+    ...elegidos,
+    ..._shuffle(debajo.filter(v => !elegidos.includes(v))).slice(0, cuantosDebajo - tipicoDebajo),
+    ..._shuffle(arriba.filter(v => !elegidos.includes(v))).slice(0, 3 - cuantosDebajo - tipicoArriba),
   ]);
   // Red de seguridad: si por algún motivo no se juntaron 3 distractores
   // (rango demasiado angosto), se completa con offsets fijos para no colgar el juego.
@@ -54,6 +70,55 @@ function generateChallenge(lv, boost, _rand, _pick, _shuffle) {
 
   const answers = _shuffle([correct, ...wrongs]);
   return { n1, n2, op, correct, answers };
+}
+
+// Errores que de verdad cometen los chicos, con lo que significan. Sirven dos
+// veces: como distractores (elegir uno dice algo de cómo se pensó) y como
+// pista cuando se elige uno (ver pistaDelError). Los motivos NO llevan números:
+// un operando puede coincidir con la respuesta, y la pista no debe darla.
+function erroresTipicos(op, n1, n2, correct) {
+  const lista = [];
+  const agregar = (valor, motivo) => {
+    if (Number.isInteger(valor) && valor >= 0 && valor !== correct && !lista.some(e => e.valor === valor)) {
+      lista.push({ valor, motivo });
+    }
+  };
+  if (op === '+') {
+    agregar(Math.abs(n1 - n2), 'Restaste en vez de sumar. Juntá los dos grupos.');
+    agregar(correct + 1, 'Contaste uno de más. Volvé a contar con calma.');
+    agregar(correct - 1, 'Contaste uno de menos. Volvé a contar con calma.');
+    if (correct >= 10) {
+      agregar(correct + 10, 'Las unidades están bien: revisá las decenas.');
+      agregar(correct - 10, 'Las unidades están bien: revisá las decenas.');
+    }
+  } else if (op === '-') {
+    agregar(n1 + n2, 'Sumaste en vez de restar. Hay que sacar, no agregar.');
+    agregar(correct + 1, 'Te quedó uno de más. Fijate cuántos se sacan.');
+    agregar(correct - 1, 'Sacaste uno de más. Volvé a contar los que quedan.');
+    if (n1 >= 10) {
+      agregar(correct + 10, 'Las unidades están bien: revisá las decenas.');
+      agregar(correct - 10, 'Las unidades están bien: revisá las decenas.');
+    }
+  } else if (op === '×') {
+    agregar(n1 + n2, 'Sumaste en vez de multiplicar. Son grupos iguales: contá todos los puntos.');
+    agregar(correct - n2, 'Te faltó un grupo. Contá cuántas filas hay.');
+    agregar(correct + n2, 'Contaste un grupo de más. Contá cuántas filas hay.');
+  } else if (op === '÷') {
+    agregar(n1 - n2, 'Restaste en vez de dividir. Hay que repartir en partes iguales.');
+    agregar(correct + 1, 'Le diste uno de más a cada grupo. Contá un solo grupo.');
+    agregar(correct - 1, 'Le diste uno de menos a cada grupo. Contá un solo grupo.');
+  }
+  return lista;
+}
+
+// Qué decirle al chico que eligió `elegida`. Si es un error conocido, lo
+// nombra; si no, le dice para qué lado corregir. Nunca dice la respuesta.
+function pistaDelError(ch, elegida) {
+  const conocido = erroresTipicos(ch.op, ch.n1, ch.n2, ch.correct).find(e => e.valor === elegida);
+  if (conocido) return conocido.motivo;
+  return elegida < ch.correct
+    ? 'Te quedaste corto: la respuesta es más grande.'
+    : 'Te pasaste: la respuesta es más chica.';
 }
 
 function loadChallenge() {
@@ -104,7 +169,7 @@ function proceedToNextChallenge(delay = 0) {
 
 // ── Exports condicionales para tests en Node (no afecta al navegador) ──
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { generateChallenge, buildRemovalDotGrid, buildGroupsDotGrid, buildSharingDotGrid, selectAnswer, hayRivales };
+  module.exports = { generateChallenge, buildRemovalDotGrid, buildGroupsDotGrid, buildSharingDotGrid, selectAnswer, hayRivales, erroresTipicos, pistaDelError };
 }
 
 // Práctica y Desafío Diario se corren solos: ahí la bola de fuego no tiene a
@@ -345,11 +410,12 @@ function selectAnswer(ans, idx) {
     } else {
       const remaining = 3 - state.wrongStreak;
       const penaltyMsg = state.wrongStreak === 1
-        ? '❌ Incorrecto — avanzarás la mitad si aciertas ahora'
+        ? '❌ Incorrecto — si acertás ahora, avanzás la mitad'
         : `❌ 2 errores — avanzarás muy poco. Te queda ${remaining} intento`;
       setFeedback(penaltyMsg, 'err', 1100);
       updatePenaltyHearts();
-      getHaikuComment('incorrect', ch.n1, ch.op, ch.n2, ch.correct, 0);
+      // Pista concreta (qué se hizo mal), no un «¡Casi!» genérico
+      getHaikuComment('incorrect', ch.n1, ch.op, ch.n2, ch.correct, 0, '', pistaDelError(ch, ans));
 
       // Pasado el sacudón, la descartada queda apagada (no vuelve a habilitarse)
       setTimeout(() => {

@@ -33,7 +33,7 @@ const TUTEO = {
   Responde: 'Respondé', Necesitas: 'Necesitás', Ingresa: 'Ingresá', Sigue: 'Seguí',
   puedes: 'podés', clavas: 'clavás', Retoma: 'Retomá', Supera: 'Superá',
   Recuerda: 'Acordate', conoces: 'conocés', Usa: 'Usá', Completa: 'Completá',
-  Tú: 'Vos', tú: 'vos', Tienes: 'Tenés', tienes: 'tenés', Juega: 'Jugá', Intenta: 'Intentá',
+  Tú: 'Vos', tú: 'vos', Tienes: 'Tenés', tienes: 'tenés', Juega: 'Jugá', Intenta: 'Intentá', aciertas: 'acertás',
 };
 
 test('ningún texto del juego usa tuteo', () => {
