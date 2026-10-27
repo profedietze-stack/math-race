@@ -41,6 +41,13 @@ function dateKeyOffset(daysAgo) {
   d.setDate(d.getDate() - daysAgo);
   return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
 }
+// "2026-10-27" -> milisegundos de ese día (hora local). null si no es una clave
+// de día válida. Las claves no llevan ceros, así que NUNCA se comparan como texto.
+function dateKeyToTime(key) {
+  const m = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(String(key));
+  if (!m) return null;
+  return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])).getTime();
+}
 function srand(rnd, min, max) { return Math.floor(rnd() * (max - min + 1)) + min; }
 function spick(rnd, arr) { return arr[Math.floor(rnd() * arr.length)]; }
 function sshuffle(rnd, arr) {
@@ -140,7 +147,7 @@ function toast(msg, type = 'ok') {
 // ── Exports condicionales para tests en Node (no afecta al navegador) ──
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
-    rand, pick, shuffle, mulberry32, todaySeed, todayKey, dateKeyOffset,
+    rand, pick, shuffle, mulberry32, todaySeed, todayKey, dateKeyOffset, dateKeyToTime,
     srand, spick, sshuffle, escapeHtml, clamp, safeGetJSON, safeSetItem,
     pKey, getMusicVolumePct, getSfxVolumePct, musicVolumeOffsetDb, sfxVolumeMult,
     setCurrentProfileId: (id) => { globalThis.currentProfileId = id; }, // solo para tests

@@ -866,6 +866,13 @@ body {
   border-color: var(--red);
 }
 .answer-btn.incorrect .answer-number { color: var(--red); }
+/* Opción ya descartada: no se borra (el chico ve qué probó), pero se apaga y
+   se tacha para que no parezca disponible. Sin depender sólo del color. */
+.answer-btn.discarded {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.answer-btn.discarded .answer-number { text-decoration: line-through; }
 @keyframes correctPop {
   0% { transform: scale(1); }
   50% { transform: scale(1.06); }

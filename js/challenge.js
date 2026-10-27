@@ -28,13 +28,21 @@ function generateChallenge(lv, boost, _rand, _pick, _shuffle) {
     n2 = _rand(2, factorMax); correct = _rand(2, factorMax); n1 = n2 * correct;
   }
 
-  const wrongs = new Set();
-  let attempts = 0;
-  while (wrongs.size < 3 && attempts < 200) {
-    attempts++;
-    const w = _rand(Math.max(0, correct - 8), correct + 8);
-    if (w !== correct && w >= 0) wrongs.add(w);
-  }
+  // Distractores a 8 o menos de la correcta, eligiendo primero CUÁNTOS van por
+  // debajo (0 a 3, parejo). Antes salían al azar de correcta ± 8: simétricos,
+  // así que la correcta quedaba en el medio de las cuatro (2ª o 3ª más chica el
+  // 78 % de las veces, la mayor sólo el 6-9 %). La posición en pantalla ya se
+  // barajaba; lo que delataba la respuesta era el tamaño.
+  // Con un resultado chico (0, 1, 2) no hay tantos naturales por debajo:
+  // ahí ser la menor es inevitable, y los que faltan van por arriba.
+  const debajo = [], arriba = [];
+  for (let w = Math.max(0, correct - 8); w < correct; w++) debajo.push(w);
+  for (let w = correct + 1; w <= correct + 8; w++) arriba.push(w);
+  const cuantosDebajo = Math.min(_rand(0, 3), debajo.length);
+  const wrongs = new Set([
+    ..._shuffle(debajo).slice(0, cuantosDebajo),
+    ..._shuffle(arriba).slice(0, 3 - cuantosDebajo),
+  ]);
   // Red de seguridad: si por algún motivo no se juntaron 3 distractores
   // (rango demasiado angosto), se completa con offsets fijos para no colgar el juego.
   let filler = 1;
@@ -85,7 +93,9 @@ function loadChallenge() {
 // Después de resolver una jugada, avanza a la siguiente pregunta — salvo en
 // modo humano, donde primero hay que confirmar que se pasó el dispositivo.
 function proceedToNextChallenge(delay = 0) {
+  const carrera = state.carreraId;
   const run = () => {
+    if (!state.gameActive || state.carreraId !== carrera) return;
     if (state.mode === 'human') showPassDeviceScreen();
     else loadChallenge();
   };
@@ -94,7 +104,7 @@ function proceedToNextChallenge(delay = 0) {
 
 // ── Exports condicionales para tests en Node (no afecta al navegador) ──
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { generateChallenge, buildRemovalDotGrid, buildGroupsDotGrid, buildSharingDotGrid };
+  module.exports = { generateChallenge, buildRemovalDotGrid, buildGroupsDotGrid, buildSharingDotGrid, selectAnswer };
 }
 
 function renderChallenge(isFireball = false) {
@@ -286,6 +296,9 @@ function selectAnswer(ans, idx) {
   const selectedBtn = document.getElementById(`abtn-${idx}`);
   const correctIdx = ch.answers.indexOf(ch.correct);
   const correctBtn = document.getElementById(`abtn-${correctIdx}`);
+  // Una opción ya descartada no cuenta como otro error (doble toque).
+  ch.descartadas = ch.descartadas || [];
+  if (!isCorrect && ch.descartadas.includes(idx)) return;
   state.totalCount++;
 
   if (isCorrect) {
@@ -309,15 +322,18 @@ function selectAnswer(ans, idx) {
     state.difficultyBoost = Math.max(0, (state.difficultyBoost || 0) - 1);
     state.opMisses[ch.op] = (state.opMisses[ch.op] || 0) + 1;
     selectedBtn.classList.add('incorrect');
-    // Flash correct briefly
-    correctBtn.classList.add('correct');
-    setTimeout(() => correctBtn.classList.remove('correct'), 900);
+    // La opción equivocada queda descartada. La correcta NO se muestra
+    // mientras quedan intentos: antes se iluminaba tras cada error, y el
+    // segundo intento pasaba a ser mirar, no pensar (10 m sin hacer la cuenta).
+    ch.descartadas.push(idx);
+    selectedBtn.disabled = true;
 
     if (state.wrongStreak >= 3) {
-      // Bloqueado — no puede seguir intentando
+      // Bloqueado — no puede seguir intentando. Recién acá se muestra la correcta.
       ch.answered = true;
       ch.selectedAnswer = '__blocked__';
       document.querySelectorAll('.answer-btn').forEach(b => b.disabled = true);
+      if (correctBtn) correctBtn.classList.add('correct');
       const correctDots = buildDotGrid(ch.correct, 'dot-blue');
       setFeedback(`❌ 3 errores — ¡sin avance este turno! La correcta era ${ch.correct}<div style="margin-top:4px;">${correctDots}</div>`, 'err', 3000);
       updatePenaltyHearts();
@@ -331,11 +347,10 @@ function selectAnswer(ans, idx) {
       updatePenaltyHearts();
       getHaikuComment('incorrect', ch.n1, ch.op, ch.n2, ch.correct, 0);
 
-      // Re-enable after short pause (reset the wrong btn, keep trying)
+      // Pasado el sacudón, la descartada queda apagada (no vuelve a habilitarse)
       setTimeout(() => {
         selectedBtn.classList.remove('incorrect');
-        // Re-wire — don't call full renderAnswerBtns to avoid losing state
-        document.querySelectorAll('.answer-btn').forEach(b => b.disabled = false);
+        selectedBtn.classList.add('discarded');
         updatePenaltyHearts();
       }, 1200);
     }

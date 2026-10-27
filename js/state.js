@@ -122,9 +122,15 @@ function recordDailyStatsLog(correctCount, totalCount) {
   entry.correct = (Number.isFinite(entry.correct) ? entry.correct : 0) + correctCount;
   entry.total = (Number.isFinite(entry.total) ? entry.total : 0) + totalCount;
   log[key] = entry;
-  // Poda: no dejar crecer el log para siempre, con 60 días alcanza y sobra
-  const cutoff = dateKeyOffset(60);
-  Object.keys(log).forEach(k => { if (k < cutoff) delete log[k]; });
+  // Poda: no dejar crecer el log para siempre, con 60 días alcanza y sobra.
+  // Se compara como fecha, no como texto: las claves no llevan ceros y
+  // "2026-10-27" < "2026-8-28" da verdadero, así que la poda de texto borraba
+  // el día de hoy cada vez que se guardaba algo en octubre.
+  const cutoff = dateKeyToTime(dateKeyOffset(60));
+  Object.keys(log).forEach(k => {
+    const t = dateKeyToTime(k);
+    if (t !== null && t < cutoff) delete log[k];
+  });
   safeSetItem(pKey('dailyStatsLog'), JSON.stringify(log));
 }
 

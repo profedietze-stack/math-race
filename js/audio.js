@@ -4,7 +4,13 @@
 
 // ── Web Audio API: UI SFX ──────────────
 let audioCtx = null;
-let musicMuted = false;
+// El silencio se guarda: el docente que silencia treinta tablets no tiene que
+// volver a hacerlo al día siguiente. Ajuste de dispositivo, no por perfil
+// (igual que el volumen).
+function leerMuteGuardado() {
+  try { return localStorage.getItem('musicMuted') === '1'; } catch (e) { return false; }
+}
+let musicMuted = leerMuteGuardado();
 let currentMusic = null; // 'menu' | 'race' | null
 let Tone = null;
 
@@ -339,9 +345,17 @@ function stopAllMusic() {
   currentMusic = null;
 }
 
+function syncMusicButtons() {
+  document.querySelectorAll('.is-music-btn').forEach(btn => {
+    btn.classList.toggle('muted', musicMuted);
+    btn.setAttribute('aria-pressed', musicMuted ? 'true' : 'false');
+  });
+}
+
 function toggleMusic() {
   musicMuted = !musicMuted;
-  document.querySelectorAll('.is-music-btn').forEach(btn => btn.classList.toggle('muted', musicMuted));
+  safeSetItem('musicMuted', musicMuted ? '1' : '0');
+  syncMusicButtons();
 
   if (musicMuted) {
     stopAllMusic();
@@ -403,7 +417,7 @@ window.selectAnswer = function(ans, idx) {
 const _origDoFireball = doFireball;
 window.doFireball = function() {
   const ch = state.currentChallenge;
-  if (!ch.answered || ch.selectedAnswer !== ch.correct) {
+  if (!ch || !ch.answered || ch.jugado || ch.selectedAnswer !== ch.correct) {
     _origDoFireball();
     return;
   }
@@ -423,3 +437,8 @@ window.renderAnswerBtns = function() {
     btn.onclick = () => window.selectAnswer(ans, i);
   });
 };
+
+// ── Exports condicionales para tests en Node (no afecta al navegador) ──
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { toggleMusic, syncMusicButtons, isMusicMuted: () => musicMuted };
+}

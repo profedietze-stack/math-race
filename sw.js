@@ -3,7 +3,7 @@
 // Estrategia: Cache-first para assets, Network-first para nada
 // ============================================================
 
-const CACHE_NAME = 'math-race-v9';
+const CACHE_NAME = 'math-race-v10';
 
 // Recursos a pre-cachear en la instalación
 const PRECACHE = [

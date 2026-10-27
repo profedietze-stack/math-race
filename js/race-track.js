@@ -4,6 +4,9 @@
 function launchGame() {
   state.positions = state.dragons.map(() => 0);
   state.gameActive = true;
+  // Identifica esta carrera: un timer de la anterior (bola de fuego, próxima
+  // pregunta) que llegue tarde la reconoce como ajena y no hace nada.
+  state.carreraId = (state.carreraId || 0) + 1;
   state.streak = 0;
   state.correctCount = 0;
   state.totalCount = 0;

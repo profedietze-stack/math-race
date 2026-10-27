@@ -8,6 +8,7 @@ window.addEventListener('load', () => {
   try { state.achievements = safeGetJSON(pKey('achievements'), {}); } catch (e) { console.warn('achievements falló', e); }
   try { applyStoredA11ySettings(); } catch (e) { console.warn('a11y settings falló', e); }
   try { updateProfileBadge(); } catch (e) { console.warn('profile badge falló', e); }
+  try { syncMusicButtons(); } catch (e) { console.warn('botones de música fallaron', e); }
 
   // Start menu music on first user interaction (autoplay policy)
   const startAudioOnce = async () => {

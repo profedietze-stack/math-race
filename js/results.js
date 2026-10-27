@@ -132,6 +132,9 @@ function exitGame() {
 }
 function exitConfirm() {
   document.getElementById('exitModal').classList.remove('active');
+  // La carrera termina acá: los timers que quedaron en el aire (bola de
+  // fuego, próxima pregunta) miran esto antes de tocar nada.
+  state.gameActive = false;
   // Salir a mitad de carrera no borra lo que el alumno respondió. Vale para
   // todos los modos, no sólo para práctica: el modo práctica no dispara
   // endRace nunca, pero una carrera vs IA abandonada tampoco.
@@ -240,4 +243,9 @@ function renderAchievements() {
   }).join('');
 
   grid.innerHTML = html;
+}
+
+// ── Exports condicionales para tests en Node (no afecta al navegador) ──
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { exitConfirm, exitCancel, unlockAchievement };
 }

@@ -14,9 +14,15 @@ function aiAdvanceAmount() {
 // ═══════════════════════════════════════
 //  MOVE / FIREBALL
 // ═══════════════════════════════════════
+// Cada pregunta respondida vale UNA jugada (avanzar o atacar). La siguiente
+// pregunta recién se carga unos cientos de ms después, y sin esta marca cada
+// toque extra en ese rato volvía a avanzar: tres toques, 60 metros.
 function doMove() {
   const ch = state.currentChallenge;
+  if (!ch || !state.gameActive) return;
   if (!ch.answered) { toast('Primero elige una respuesta', 'err'); return; }
+  if (ch.jugado) return;
+  ch.jugado = true;
 
   const whoIdx = state.mode === 'human' ? state.currentTurn : 0;
 
@@ -55,7 +61,9 @@ function doMove() {
 
 function doFireball() {
   const ch = state.currentChallenge;
+  if (!ch || !state.gameActive) return;
   if (!ch.answered) { toast('Primero elige una respuesta', 'err'); return; }
+  if (ch.jugado) return;
   if (ch.selectedAnswer !== ch.correct) { toast('Necesitas responder correctamente para atacar 🔥', 'err'); return; }
 
   const whoIdx = state.mode === 'human' ? state.currentTurn : 0;
@@ -63,7 +71,9 @@ function doFireball() {
   // Pick random target from opponents (both modes)
   const others = [...Array(state.dragons.length).keys()].filter(i => i !== whoIdx);
   if (others.length === 0) { toast('No hay rivales para atacar', 'err'); return; }
+  ch.jugado = true;
   const targetIdx = pick(others);
+  const carrera = state.carreraId;
 
   // Trigger explosion on target runner
   const runnerEl = document.getElementById(`runner-${targetIdx}`);
@@ -77,6 +87,9 @@ function doFireball() {
 
   // Delay position update so explosion lands first
   setTimeout(() => {
+    // Si en el medio se salió (o ya empezó otra carrera), la bola de fuego
+    // no aterriza: antes terminaba la carrera igual, con el cartel encima del menú.
+    if (!state.gameActive || state.carreraId !== carrera) return;
     state.positions[targetIdx] = Math.max(0, state.positions[targetIdx] - 15);
 
     if (state.mode === 'ai') {
@@ -117,4 +130,9 @@ function checkWinner() {
     }
   }
   return false;
+}
+
+// ── Exports condicionales para tests en Node (no afecta al navegador) ──
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { aiAdvanceAmount, doMove, doFireball, checkWinner };
 }
