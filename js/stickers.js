@@ -8,7 +8,7 @@ function showStickerPick(mode) {
   const unlocked = getUnlockedStickerIds();
 
   if (mode === 'ai') {
-    title.textContent = '🎮 Elige tu corredor';
+    title.textContent = '🎮 Elegí tu corredor';
     const currentSel = state.selectedStickerId;
     body.innerHTML = `
       <div class="spick-section">
@@ -144,7 +144,7 @@ function startVsAI() {
   state.level = readSavedLevel();
   const p = getStickerById(state.selectedStickerId);
   state.dragons = [
-    { name: 'Tú', emoji: p.emoji, color: p.color },
+    { name: 'Vos', emoji: p.emoji, color: p.color },
     ...AI_RIVALS.slice(0, 3),
   ];
   launchGame();
@@ -158,7 +158,7 @@ function startHumanRace() {
   });
   // Require at least 2 named
   if (state.humanPlayers.filter(p => p.name).length < 2) {
-    toast('Ingresa al menos 2 nombres', 'err'); return;
+    toast('Escribí al menos 2 nombres', 'err'); return;
   }
   state.mode = 'human';
   state.currentTurn = 0;
@@ -175,7 +175,7 @@ function startHumanRace() {
 function startPractice() {
   state.mode = 'practice';
   const p = getStickerById(state.selectedStickerId);
-  state.dragons = [{ name: 'Tú', emoji: p.emoji, color: p.color }];
+  state.dragons = [{ name: 'Vos', emoji: p.emoji, color: p.color }];
   launchGame();
 }
 
@@ -190,6 +190,6 @@ function startDailyChallenge() {
   state.dailyRng = mulberry32(todaySeed());
   state.dailyIndex = 0;
   const p = getStickerById(state.selectedStickerId);
-  state.dragons = [{ name: 'Tú', emoji: p.emoji, color: p.color }];
+  state.dragons = [{ name: 'Vos', emoji: p.emoji, color: p.color }];
   launchGame();
 }

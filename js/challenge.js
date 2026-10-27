@@ -117,7 +117,7 @@ function renderChallenge(isFireball = false) {
 
   const turnLabel = state.mode === 'human'
     ? `<div class="challenge-title">Turno de: <strong style="color:var(--yellow)">${escapeHtml(state.dragons[state.currentTurn].name)} ${state.dragons[state.currentTurn].emoji}</strong></div>`
-    : `<div class="challenge-title">Resuelve y Avanza 🐉</div>`;
+    : `<div class="challenge-title">Resolvé y avanzá 🐉</div>`;
 
   const wordProblemHtml = ch.wordProblem
     ? `<div class="word-problem">📖 ${ch.wordProblem}</div>`
@@ -179,7 +179,7 @@ function renderChallenge(isFireball = false) {
 
     <div class="ai-response" id="aiComment">
       <span class="ai-icon">🤖</span>
-      <span id="aiText">¡Elige la respuesta correcta!</span>
+      <span id="aiText">¡Elegí la respuesta correcta!</span>
     </div>
   `;
 

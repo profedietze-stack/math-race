@@ -41,7 +41,7 @@ test('en vs Amigos el cartel final nombra a quien ganó', () => {
 });
 
 test('contra la IA sigue hablándole al jugador', () => {
-  const dragones = [{ name: 'Tú' }, { name: 'IA-Alfa' }];
+  const dragones = [{ name: 'Vos' }, { name: 'IA-Alfa' }];
   assert.deepEqual(tituloDeResultado('ai', 0, dragones), { emoji: '🏆', titulo: '¡Ganaste!' });
   assert.deepEqual(tituloDeResultado('ai', 1, dragones), { emoji: '😅', titulo: '¡Ganó IA-Alfa!' });
 });
@@ -50,6 +50,6 @@ test('sin rivales no se ofrece la bola de fuego', () => {
   // En Práctica y en el Desafío Diario se corre solo. El botón estaba igual, y
   // al tocarlo decía «No hay rivales para atacar»: un botón que no puede hacer
   // nada es ruido en la pantalla más importante del juego.
-  assert.equal(hayRivales([{ name: 'Tú' }]), false);
-  assert.equal(hayRivales([{ name: 'Tú' }, { name: 'IA' }]), true);
+  assert.equal(hayRivales([{ name: 'Vos' }]), false);
+  assert.equal(hayRivales([{ name: 'Vos' }, { name: 'IA' }]), true);
 });

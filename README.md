@@ -1,4 +1,4 @@
-# Math Race — Resuelve, Compite, Gana
+# Math Race — Resolvé, Competí, Ganá
 
 Juego educativo de cálculo mental (sumas y restas) para primaria. Los jugadores resuelven problemas para hacer avanzar a su dragón en una carrera, contra la IA (10 niveles de dificultad) o contra 2-4 amigos en el mismo dispositivo. Desarrollado por **ProfeD.**
 

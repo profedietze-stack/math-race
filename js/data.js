@@ -52,33 +52,33 @@ const RACE_DISTANCE = 100;
 // ═══════════════════════════════════════
 const COMMENTS = {
   correct: [
-    '¡Genial! ¡Eres una máquina de calcular! 🚀',
+    '¡Genial! ¡Sos una máquina de calcular! 🚀',
     '¡Correcto! ¡Tu cerebro vuela a mil! ⭐',
     '¡Perfecto! ¡Nadie te para hoy! ⚡',
-    '¡Exacto! ¡Sigue así, campeón! 🏆',
+    '¡Exacto! ¡Seguí así! 🏆',
     '¡Brillante! ¡La matemática es tu superpoder! 💥',
-    '¡Increíble respuesta! ¡Eres el más rápido! 🔥',
+    '¡Increíble respuesta! ¡Qué velocidad! 🔥',
     '¡Lo sabías! ¡Tu dragón vuela más alto! 🐉',
     '¡Crack total! ¡Imparable! 👑',
   ],
   streak: [
-    '¡COMBO x{n}! ¡Eres imparable! 🔥🔥',
+    '¡COMBO x{n}! ¡Sos imparable! 🔥🔥',
     '¡{n} seguidas! ¡Modo bestia activado! 💪',
     '¡Racha de {n}! ¡Nadie te detiene! ⚡⚡',
     '¡{n} correctas seguidas! ¡Campeón absoluto! 🏆🏆',
   ],
   incorrect: [
-    '¡Casi! La próxima la clavas 💪',
-    '¡Sigue intentando, tú puedes! 🌟',
+    '¡Casi! La próxima la clavás 💪',
+    '¡Seguí intentando, vos podés! 🌟',
     '¡No pasa nada! Cada error enseña algo nuevo ✨',
     '¡Ánimo! ¡Tu corredor necesita que lo intentes de nuevo! 🐉',
     '¡Tranqui! Los campeones también fallan a veces 🙌',
   ],
   blocked: [
     `¡Uy! 3 errores — la respuesta era {correct}. ¡La próxima sí! 💪`,
-    `¡Sin avance esta vez! Recuerda: {correct} es la clave 🔑`,
-    `¡Turno perdido! Pero ya sabrás que era {correct} 🧠`,
-    `¡Tranquilo! Ahora ya conoces la respuesta: {correct} ⭐`,
+    `¡Sin avance esta vez! Acordate: era {correct} 🔑`,
+    `¡Turno perdido! Ahora ya sabés que era {correct} 🧠`,
+    `¡Tranqui! Ahora ya conocés la respuesta: {correct} ⭐`,
   ],
   fireball: [
     '¡BOOM! 🔥 ¡{target} sale disparado hacia atrás!',
@@ -89,12 +89,12 @@ const COMMENTS = {
   end_win: [
     '¡CAMPEÓN! ¡Matemáticas y velocidad, la combinación perfecta! 🏆',
     '¡Ganaste! ¡Tu cerebro es más rápido que el rayo! ⚡👑',
-    '¡Primer lugar! ¡Eres una estrella de las matemáticas! ⭐🥇',
-    '¡Victoria total! ¡Sigue practicando y serás imbatible! 🔥🏆',
+    '¡Primer lugar! ¡Sos una estrella de las matemáticas! ⭐🥇',
+    '¡Victoria total! ¡Seguí practicando y vas a ser imbatible! 🔥🏆',
   ],
   end_lose: [
     '¡Buen intento! ¡La próxima carrera es tuya! 💪🚀',
-    '¡Gran esfuerzo! ¡Sigue entrenando tu súper cerebro! 🧠⭐',
+    '¡Gran esfuerzo! ¡Seguí entrenando tu súper cerebro! 🧠⭐',
     '¡Casi! ¡Una más y llegas primero! 🏁🔥',
     '¡No te rindas! ¡Los campeones siguen intentando! 👑💥',
   ],
@@ -104,14 +104,14 @@ const COMMENTS = {
 //  ACHIEVEMENTS
 // ═══════════════════════════════════════
 const ACHIEVS = [
-  { id: 'firstWin',    icon: '🏆', name: 'Primera Victoria',  desc: 'Gana una carrera vs IA' },
-  { id: 'allLevels',   icon: '👑', name: 'Rey del Cálculo',    desc: 'Completa el nivel 10 vs IA' },
+  { id: 'firstWin',    icon: '🏆', name: 'Primera Victoria',  desc: 'Ganá una carrera vs IA' },
+  { id: 'allLevels',   icon: '👑', name: 'Rey del Cálculo',    desc: 'Completá el nivel 10 vs IA' },
   { id: 'speedMath',   icon: '⚡', name: 'Mente Veloz',        desc: '5 respuestas correctas seguidas' },
-  { id: 'fireballer',  icon: '🔥', name: 'Maestro del Fuego',  desc: 'Usa 5 bolas de fuego en una carrera vs IA' },
-  { id: 'halfwayHero', icon: '🎯', name: 'A Mitad de Camino',  desc: 'Supera el nivel 5 vs IA' },
+  { id: 'fireballer',  icon: '🔥', name: 'Maestro del Fuego',  desc: 'Usá 5 bolas de fuego en una carrera vs IA' },
+  { id: 'halfwayHero', icon: '🎯', name: 'A Mitad de Camino',  desc: 'Superá el nivel 5 vs IA' },
   { id: 'perfectRace', icon: '💎', name: 'Carrera Perfecta',   desc: '100% de precisión en una carrera vs IA' },
-  { id: 'comeback',    icon: '🦅', name: 'Remontada Épica',    desc: 'Gana estando último en algún turno vs IA' },
-  { id: 'unstoppable', icon: '💨', name: 'Imparable',          desc: 'Gana 3 carreras seguidas vs IA' },
+  { id: 'comeback',    icon: '🦅', name: 'Remontada Épica',    desc: 'Ganá estando último en algún turno vs IA' },
+  { id: 'unstoppable', icon: '💨', name: 'Imparable',          desc: 'Ganá 3 carreras seguidas vs IA' },
 ];
 
 // ═══════════════════════════════════════

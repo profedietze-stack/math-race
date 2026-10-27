@@ -248,7 +248,7 @@ function renderAchievements() {
       <div class="achiev-card ${isUnlocked ? 'unlocked' : 'locked'}" style="position:relative;">
         <div class="achiev-icon">${s.emoji}</div>
         <div class="achiev-name">${s.name}</div>
-        <div class="achiev-desc">${s.unlockLevel === 0 ? 'Libre' : (isUnlocked ? `Desbloqueado ✓` : `Supera nivel ${s.unlockLevel}`)}</div>
+        <div class="achiev-desc">${s.unlockLevel === 0 ? 'Libre' : (isUnlocked ? `Desbloqueado ✓` : `Superá el nivel ${s.unlockLevel}`)}</div>
         ${!isUnlocked ? `<div style="position:absolute;top:6px;right:8px;font-size:0.7rem;">🔒</div>` : ''}
       </div>
     `;

@@ -20,7 +20,7 @@ function aiAdvanceAmount() {
 function doMove() {
   const ch = state.currentChallenge;
   if (!ch || !state.gameActive) return;
-  if (!ch.answered) { toast('Primero elige una respuesta', 'err'); return; }
+  if (!ch.answered) { toast('Primero elegí una respuesta', 'err'); return; }
   if (ch.jugado) return;
   ch.jugado = true;
 
@@ -62,9 +62,9 @@ function doMove() {
 function doFireball() {
   const ch = state.currentChallenge;
   if (!ch || !state.gameActive) return;
-  if (!ch.answered) { toast('Primero elige una respuesta', 'err'); return; }
+  if (!ch.answered) { toast('Primero elegí una respuesta', 'err'); return; }
   if (ch.jugado) return;
-  if (ch.selectedAnswer !== ch.correct) { toast('Necesitas responder correctamente para atacar 🔥', 'err'); return; }
+  if (ch.selectedAnswer !== ch.correct) { toast('Necesitás responder bien para atacar 🔥', 'err'); return; }
 
   const whoIdx = state.mode === 'human' ? state.currentTurn : 0;
 

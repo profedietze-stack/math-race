@@ -69,7 +69,7 @@ function resumeSavedGame() {
   state.level = readSavedLevel();
   const p = getStickerById(state.selectedStickerId);
   state.dragons = [
-    { name: 'Tú', emoji: p.emoji, color: p.color },
+    { name: 'Vos', emoji: p.emoji, color: p.color },
     ...AI_RIVALS.slice(0, 3),
   ];
   launchGame();
