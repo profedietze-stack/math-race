@@ -182,8 +182,11 @@ function startPractice() {
 // ─── DESAFÍO DIARIO ───────────────────────────────
 function startDailyChallenge() {
   if (localStorage.getItem(pKey('dailyDate')) === todayKey()) {
-    const acc = localStorage.getItem(pKey('dailyAccuracy'));
-    toast(`Ya jugaste el desafío de hoy — Precisión: ${acc}%. ¡Volvé mañana!`, 'ok');
+    const acc = parseInt(localStorage.getItem(pKey('dailyAccuracy')), 10) || 0;
+    const total = parseInt(localStorage.getItem(pKey('dailyTotal')), 10) || 0;
+    toast(total > 0
+      ? `Ya jugaste el desafío de hoy — Precisión: ${acc}%. ¡Volvé mañana!`
+      : 'Ya empezaste el desafío de hoy. ¡Volvé mañana por uno nuevo!', 'ok');
     return;
   }
   state.mode = 'daily';
@@ -192,4 +195,12 @@ function startDailyChallenge() {
   const p = getStickerById(state.selectedStickerId);
   state.dragons = [{ name: 'Vos', emoji: p.emoji, color: p.color }];
   launchGame();
+  // Se marca al EMPEZAR, no al terminar: las preguntas salen de la fecha, así
+  // que salir a mitad y volver a entrar repetía las mismas hasta sacar 100 %.
+  guardarResultadoDiario();
+}
+
+// ── Exports condicionales para tests en Node (no afecta al navegador) ──
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { startVsAI, startHumanRace, startPractice, startDailyChallenge };
 }

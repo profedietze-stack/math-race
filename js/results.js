@@ -89,15 +89,21 @@ function endRace(winnerIdx) {
 // ═══════════════════════════════════════
 //  DESAFÍO DIARIO — fin
 // ═══════════════════════════════════════
-function endDailyChallenge() {
-  state.gameActive = false;
-  guardarEstadisticasDeCarrera();
-
+// Guarda cómo va el diario de hoy. Se llama al empezar (marca el día: no se
+// puede volver a jugar), al terminar y al salir a mitad (queda lo respondido).
+function guardarResultadoDiario() {
   const accuracy = state.totalCount > 0 ? Math.round((state.correctCount / state.totalCount) * 100) : 0;
   safeSetItem(pKey('dailyDate'), todayKey());
   safeSetItem(pKey('dailyAccuracy'), accuracy);
   safeSetItem(pKey('dailyCorrect'), state.correctCount);
   safeSetItem(pKey('dailyTotal'), state.totalCount);
+  return accuracy;
+}
+
+function endDailyChallenge() {
+  state.gameActive = false;
+  guardarEstadisticasDeCarrera();
+  const accuracy = guardarResultadoDiario();
 
   document.getElementById('resultEmoji').textContent = '📅';
   document.getElementById('resultTitle').textContent = '¡Desafío Completado!';
@@ -151,6 +157,7 @@ function exitConfirm() {
   // todos los modos, no sólo para práctica: el modo práctica no dispara
   // endRace nunca, pero una carrera vs IA abandonada tampoco.
   guardarEstadisticasDeCarrera();
+  if (state.mode === 'daily') guardarResultadoDiario();
   showScreen('homeScreen');
 }
 function exitCancel() {
@@ -259,5 +266,5 @@ function renderAchievements() {
 
 // ── Exports condicionales para tests en Node (no afecta al navegador) ──
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { exitConfirm, exitCancel, unlockAchievement, tituloDeResultado };
+  module.exports = { exitConfirm, exitCancel, unlockAchievement, tituloDeResultado, guardarResultadoDiario };
 }

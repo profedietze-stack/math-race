@@ -1,11 +1,17 @@
 // ═══════════════════════════════════════
 //  IA ADAPTATIVA (catch-up / mercy rubber-band)
 // ═══════════════════════════════════════
+// Ritmo extra de la IA por cada nivel por encima del 1. Sin esto la IA corría
+// igual en el nivel 1 y en el 10: con 50 % de aciertos se ganaba el 60 % de
+// las carreras en cualquier nivel. Ver tests/ia-por-nivel.test.js.
+const IA_EXTRA_POR_NIVEL = 0.4;
+
 function aiAdvanceAmount() {
   const aiPositions = state.positions.slice(1);
   const avgAI = aiPositions.reduce((a, b) => a + b, 0) / aiPositions.length;
   const gap = state.positions[0] - avgAI; // positivo = jugador adelante
-  let base = rand(4, 18);
+  const nivel = Number.isFinite(state.level) ? clamp(state.level, 1, 10) : 1;
+  let base = rand(4, 18) + (nivel - 1) * IA_EXTRA_POR_NIVEL;
   if (gap > 15) base += Math.min(gap * 0.2, 10);       // catch-up: IA acelera un poco
   else if (gap < -15) base -= Math.min(-gap * 0.15, 6); // mercy: IA afloja un poco
   return Math.max(2, base);
