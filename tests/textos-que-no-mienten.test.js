@@ -53,3 +53,11 @@ test('sin rivales no se ofrece la bola de fuego', () => {
   assert.equal(hayRivales([{ name: 'Vos' }]), false);
   assert.equal(hayRivales([{ name: 'Vos' }, { name: 'IA' }]), true);
 });
+
+test('«+1 fila más» y «+1 grupo más», en singular', () => {
+  // Decía «+1 filas más» y «+1 grupos más» cuando sobraba uno solo.
+  assert.match(buildGroupsDotGrid(7, 3), /\+1 fila más/);
+  assert.match(buildGroupsDotGrid(8, 3), /\+2 filas más/);
+  assert.match(buildSharingDotGrid(56, 7), /\+1 grupo más/);
+  assert.match(buildSharingDotGrid(64, 8), /\+2 grupos más/);
+});

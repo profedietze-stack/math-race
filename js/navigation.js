@@ -53,13 +53,13 @@ function showContinue() {
   if (!cont) return;
   if (saved > 1) {
     cont.innerHTML = `
-      <div style="background:rgba(255,255,255,0.05);padding:16px;border-radius:14px;margin-bottom:12px;">
-        <div style="font-weight:800;margin-bottom:8px;">🐉 Modo IA — Nivel ${saved}/10</div>
+      <div class="guardada-card">
+        <div class="guardada-titulo">🐉 Modo IA — Nivel ${saved}/10</div>
         <button class="start-race-btn" onclick="resumeSavedGame()">▶ Continuar desde Nivel ${saved}</button>
       </div>
     `;
   } else {
-    cont.innerHTML = '<p style="color:var(--text-muted);text-align:center;margin-top:30px;">No hay partidas guardadas</p>';
+    cont.innerHTML = '<p class="nota-vacia">No hay partidas guardadas</p>';
   }
   showScreen('continueScreen');
 }

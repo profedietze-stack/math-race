@@ -81,15 +81,15 @@ function renderProfileScreen() {
     html += `
       <div class="profile-new-row">
         <input type="text" id="newProfileName" class="hplayer-input" placeholder="Nombre nuevo jugador" maxlength="16">
-        <button class="start-race-btn" style="margin-top:0;width:auto;padding:12px 18px;" onclick="handleCreateProfile()">＋ Crear</button>
+        <button class="btn-en-linea start-race-btn" onclick="handleCreateProfile()">＋ Crear</button>
       </div>
     `;
   } else {
-    html += `<p style="color:var(--text-muted);font-size:0.8rem;text-align:center;margin-top:10px;">Máximo ${MAX_PROFILES} jugadores. Borrá alguno para agregar otro.</p>`;
+    html += `<p class="nota-vacia">Máximo ${MAX_PROFILES} jugadores. Borrá alguno para agregar otro.</p>`;
   }
 
   if (profiles.length > 0) {
-    html += `<button class="add-player-btn" style="margin-top:14px;" onclick="chooseGuestMode()">Jugar como invitado (sin perfil)</button>`;
+    html += `<button class="mt-3 add-player-btn" onclick="chooseGuestMode()">Jugar como invitado (sin perfil)</button>`;
   }
 
   body.innerHTML = html;

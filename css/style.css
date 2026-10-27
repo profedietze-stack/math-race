@@ -94,18 +94,6 @@ body {
   z-index: 2;
 }
 
-.home-badge {
-  font-size: 0.65rem;
-  font-weight: 900;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--yellow);
-  background: rgba(255,214,10,0.1);
-  border: 1px solid rgba(255,214,10,0.25);
-  padding: 4px 12px;
-  border-radius: 20px;
-  margin-bottom: 4px;
-}
 
 .profile-pill {
   display: inline-flex;
@@ -181,7 +169,7 @@ body {
   height: 100%;
 }
 .weekly-bar { width: 100%; border-radius: 4px 4px 0 0; transition: height 0.3s; min-height: 4px; }
-.weekly-bar-label { font-size: 0.6rem; font-weight: 800; color: var(--text-muted); margin-top: 4px; }
+.weekly-bar-label { font-size: 0.72rem; font-weight: 800; color: var(--text-muted); margin-top: 4px; }
 
 /* ── PROBLEMA CON ENUNCIADO ── */
 .word-problem {
@@ -311,7 +299,7 @@ body {
 }
 .spick-btn:active { transform: scale(0.93); }
 .spick-btn .spick-emoji { font-size: clamp(1.4rem, 6vw, 2rem); line-height: 1; }
-.spick-btn .spick-name  { font-size: 0.55rem; font-weight: 800; color: rgba(255,255,255,0.6); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+.spick-btn .spick-name  { font-size: 0.72rem; font-weight: 800; color: rgba(255,255,255,0.6); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
 
 .spick-btn.unlocked:hover { background: rgba(124,58,237,0.2); border-color: var(--purple); }
 .spick-btn.selected {
@@ -417,7 +405,7 @@ body {
 .hplayer-mini-btn.sel-mini { border-color: var(--yellow); background: rgba(255,214,10,0.1); }
 .hplayer-mini-btn.locked-mini { filter: grayscale(0.9); opacity: 0.4; cursor: default; }
 .hplayer-mini-btn.locked-mini::after { content:'🔒'; position:absolute; top:1px; right:2px; font-size:0.45rem; }
-.hplayer-optional-tag { font-size: 0.62rem; color: var(--text-muted); font-weight: 700; margin-left: auto; }
+.hplayer-optional-tag { font-size: 0.7rem; color: var(--text-muted); font-weight: 700; margin-left: auto; }
 
 .add-player-btn {
   width: 100%;
@@ -662,7 +650,7 @@ body {
 }
 .dragon-emoji { font-size: 1.8rem; line-height: 1; filter: drop-shadow(0 0 6px rgba(255,107,53,0.5)); }
 .dragon-label {
-  font-size: 0.58rem;
+  font-size: 0.68rem;
   font-weight: 800;
   color: var(--white);
   white-space: nowrap;
@@ -750,7 +738,7 @@ body {
 }
 .dot-blue { background: var(--blue); }
 .dot-orange { background: var(--orange); }
-.dot-plus { background: var(--text-muted); font-size: 0.55rem; display: flex; align-items: center; justify-content: center; color: #000; border-radius: 2px; }
+.dot-plus { background: var(--text-muted); font-size: 0.7rem; display: flex; align-items: center; justify-content: center; color: #000; border-radius: 2px; }
 
 /* Punto "quitado" — resta: hueco con una cruz, representa lo que se saca del grupo */
 .dot-removed {
@@ -773,7 +761,7 @@ body {
 
 .subtraction-block { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .subtraction-caption {
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   font-weight: 800;
   color: var(--red);
   letter-spacing: 0.3px;
@@ -841,7 +829,7 @@ body {
   flex-shrink: 0;
 }
 .answer-dot-extra {
-  font-size: 0.55rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
   font-weight: 800;
   align-self: center;
@@ -1569,3 +1557,71 @@ body.a11y-contrast .lane {
   #gameScreen .game-header { padding: 4px 12px; }
   #gameScreen .word-problem { font-size: 0.82rem; padding: 4px 8px; }
 }
+
+/* ═══════════════════════════════════════
+   COMPONENTES CHICOS (antes eran style="" sueltos en el HTML y los .js)
+   ═══════════════════════════════════════ */
+:root {
+  --esp-1: 4px; --esp-2: 8px; --esp-3: 14px; --esp-4: 20px;
+  --radio-chico: 8px; --radio-medio: 14px;
+  --texto-chico: 0.75rem; --texto-base: 0.9rem;
+}
+.mt-1 { margin-top: var(--esp-1); }
+.mt-3 { margin-top: var(--esp-3); }
+.texto-tenue { color: var(--text-muted); }
+.texto-izq { text-align: left; }
+.fila-entera { grid-column: 1 / -1; }
+.fila-centrada { display: flex; align-items: center; gap: var(--esp-2); }
+.nombre-turno { color: var(--yellow); }
+#a11yToggle { right: 66px; }
+
+/* Panel de accesibilidad */
+.ajuste-lista { display: flex; flex-direction: column; gap: var(--esp-3); margin-top: 10px; }
+.ajuste-fila, .ajuste-col { display: flex; gap: 10px; font-weight: 800; font-size: var(--texto-base); }
+.ajuste-fila { align-items: center; justify-content: space-between; }
+.ajuste-col { flex-direction: column; gap: 6px; }
+.ajuste-fila input[type="checkbox"] { width: 24px; height: 24px; }
+.ajuste-col input[type="range"] { min-height: 32px; }
+
+/* Modales */
+.modal-box-holgado { padding: 30px 22px; }
+.modal-box-compacto { padding: 24px var(--esp-4); }
+.modal-title-md { font-size: 1.35rem; text-align: center; }
+.modal-title-sm { font-size: 1.15rem; margin-bottom: 6px; }
+.modal-texto { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px; }
+.pase-nombre { font-size: 1.7rem; font-weight: 900; margin-bottom: 18px; }
+
+/* Logros / guardadas / perfiles */
+.rotulo-seccion {
+  grid-column: 1 / -1;
+  font-size: var(--texto-chico);
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: var(--esp-3) 0 var(--esp-1);
+}
+.rotulo-seccion-primero { margin-top: 0; }
+.achiev-card { position: relative; }
+.candado { position: absolute; top: 6px; right: 8px; font-size: 0.75rem; }
+.nota-vacia { color: var(--text-muted); font-size: 0.85rem; text-align: center; margin-top: 24px; }
+.guardada-card { background: rgba(255,255,255,0.05); padding: 16px; border-radius: var(--radio-medio); margin-bottom: 12px; }
+.guardada-titulo { font-weight: 800; margin-bottom: var(--esp-2); }
+.btn-en-linea { margin-top: 0; width: auto; flex-shrink: 0; padding: 12px 20px; }
+
+/* Dibujos de puntos */
+.dot-plus { width: auto; padding: 0 3px; }
+.filas-puntos { display: flex; flex-direction: column; gap: 3px; align-items: center; }
+.fila-puntos { display: flex; gap: 3px; }
+.puntos-mas { font-size: var(--texto-chico); color: var(--text-muted); font-weight: 800; margin-top: 2px; align-self: center; }
+.grupos-reparto { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; max-width: 240px; }
+.sharing-group {
+  display: flex; flex-wrap: wrap; gap: 3px; padding: 3px 4px;
+  border: 1px dashed rgba(255,255,255,0.25); border-radius: 7px;
+  max-width: 60px; justify-content: center;
+}
+
+/* «= ?» va siempre junto, y en la división/multiplicación el dibujo se
+   achica antes de empujar el resultado a otra línea. */
+.math-resultado { display: inline-flex; align-items: center; gap: clamp(6px, 2vw, 14px); white-space: nowrap; }
+.grupos-reparto { max-width: min(240px, 46vw); }

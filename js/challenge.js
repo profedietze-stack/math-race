@@ -181,7 +181,7 @@ function renderChallenge(isFireball = false) {
   const zone = document.getElementById('challengeZone');
 
   const turnLabel = state.mode === 'human'
-    ? `<div class="challenge-title">Turno de: <strong style="color:var(--yellow)">${escapeHtml(state.dragons[state.currentTurn].name)} ${state.dragons[state.currentTurn].emoji}</strong></div>`
+    ? `<div class="challenge-title">Turno de: <strong class="nombre-turno">${escapeHtml(state.dragons[state.currentTurn].name)} ${state.dragons[state.currentTurn].emoji}</strong></div>`
     : `<div class="challenge-title">Resolvé y avanzá 🐉</div>`;
 
   const wordProblemHtml = ch.wordProblem
@@ -191,7 +191,7 @@ function renderChallenge(isFireball = false) {
   zone.innerHTML = `
     <div class="challenge-header">
       ${turnLabel}
-      <div style="display:flex;align-items:center;gap:8px;">
+      <div class="fila-centrada">
         <div class="penalty-hearts" id="penaltyHearts"></div>
         <div class="challenge-badge ${isFireball ? 'fireball' : ''}">${isFireball ? '🔥 Ataque' : '⬆️ Mover'}</div>
       </div>
@@ -211,14 +211,14 @@ function renderChallenge(isFireball = false) {
       ` : ch.op === '÷' ? `
         <div class="num-block">
           <div class="dot-grid">${buildSharingDotGrid(ch.n1, ch.n2)}</div>
-          <div class="subtraction-caption" style="color:var(--text-muted);">${ch.n1} repartidos en ${ch.n2} grupos iguales</div>
+          <div class="texto-tenue subtraction-caption">${ch.n1} repartidos en ${ch.n2} grupos iguales</div>
         </div>
         <div class="math-operator">÷</div>
         <div class="big-number num-b">${ch.n2}</div>
       ` : ch.op === '×' ? `
         <div class="num-block">
           <div class="dot-grid">${buildGroupsDotGrid(ch.n1, ch.n2)}</div>
-          <div class="subtraction-caption" style="color:var(--text-muted);">${ch.n1} grupos de ${ch.n2}</div>
+          <div class="texto-tenue subtraction-caption">${ch.n1} grupos de ${ch.n2}</div>
         </div>
         <div class="math-operator">×</div>
         <div class="big-number num-b">${ch.n2}</div>
@@ -233,8 +233,10 @@ function renderChallenge(isFireball = false) {
           <div class="big-number num-b">${ch.n2}</div>
         </div>
       `}
-      <div class="math-operator math-equals" aria-hidden="true">=</div>
-      <div class="math-unknown" aria-label="respuesta">?</div>
+      <div class="math-resultado">
+        <div class="math-operator math-equals" aria-hidden="true">=</div>
+        <div class="math-unknown" aria-label="respuesta">?</div>
+      </div>
     </div>
 
     <div class="answers-grid" id="answersGrid"></div>
@@ -260,7 +262,7 @@ function buildDotGrid(n, cls) {
   for (let i = 0; i < show; i++) {
     html += `<div class="dot ${cls}"></div>`;
   }
-  if (n > 20) html += `<div class="dot-plus dot" style="width:auto;padding:0 3px;font-size:0.55rem;">+${n-20}</div>`;
+  if (n > 20) html += `<div class="dot-plus dot">+${n-20}</div>`;
   html += '</div>';
   return html;
 }
@@ -270,14 +272,14 @@ function buildDotGrid(n, cls) {
 function buildGroupsDotGrid(n1, n2) {
   const rowsShow = Math.min(n1, 6);
   const colsShow = Math.min(n2, 10);
-  let html = '<div style="display:flex;flex-direction:column;gap:3px;align-items:center;">';
+  let html = '<div class="filas-puntos">';
   for (let r = 0; r < rowsShow; r++) {
-    html += '<div style="display:flex;gap:3px;">';
+    html += '<div class="fila-puntos">';
     for (let c = 0; c < colsShow; c++) html += `<div class="dot dot-blue"></div>`;
-    if (n2 > colsShow) html += `<span class="dot-plus dot" style="width:auto;padding:0 3px;font-size:0.5rem;">+${n2-colsShow}</span>`;
+    if (n2 > colsShow) html += `<span class="dot-plus dot">+${n2-colsShow}</span>`;
     html += '</div>';
   }
-  if (n1 > rowsShow) html += `<div style="font-size:0.55rem;color:var(--text-muted);font-weight:800;margin-top:2px;">+${n1-rowsShow} filas más</div>`;
+  if (n1 > rowsShow) html += `<div class="puntos-mas">+${n1-rowsShow} ${n1 - rowsShow === 1 ? 'fila' : 'filas'} más</div>`;
   html += '</div>';
   return html;
 }
@@ -293,7 +295,7 @@ function buildRemovalDotGrid(n1, n2) {
   let html = `<div style="display:flex;flex-wrap:wrap;gap:3px;max-width:${cols*13}px;justify-content:center;">`;
   for (let i = 0; i < keepShow; i++) html += `<div class="dot dot-blue"></div>`;
   for (let i = 0; i < removeShow; i++) html += `<div class="dot dot-removed"></div>`;
-  if (n1 > 20) html += `<div class="dot-plus dot" style="width:auto;padding:0 3px;font-size:0.55rem;">+${n1-20}</div>`;
+  if (n1 > 20) html += `<div class="dot-plus dot">+${n1-20}</div>`;
   html += '</div>';
   return html;
 }
@@ -322,17 +324,17 @@ function buildSharingDotGrid(n1, n2) {
   const gruposShow = Math.min(grupos, 6);
   const porGrupoShow = Math.min(porGrupo, 12);
 
-  let html = '<div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:240px;">';
+  let html = '<div class="grupos-reparto">';
   for (let g = 0; g < gruposShow; g++) {
-    html += '<div class="sharing-group" style="display:flex;flex-wrap:wrap;gap:3px;padding:3px 4px;border:1px dashed rgba(255,255,255,0.25);border-radius:7px;max-width:60px;justify-content:center;">';
+    html += '<div class="sharing-group">';
     for (let d = 0; d < porGrupoShow; d++) html += `<div class="dot dot-blue"></div>`;
     if (porGrupo > porGrupoShow) {
-      html += `<span class="dot-plus dot" style="width:auto;padding:0 3px;font-size:0.5rem;">+${porGrupo - porGrupoShow}</span>`;
+      html += `<span class="dot-plus dot">+${porGrupo - porGrupoShow}</span>`;
     }
     html += '</div>';
   }
   if (grupos > gruposShow) {
-    html += `<div style="align-self:center;font-size:0.55rem;color:var(--text-muted);font-weight:800;">+${grupos - gruposShow} grupos más</div>`;
+    html += `<div class="puntos-mas">+${grupos - gruposShow} ${grupos - gruposShow === 1 ? 'grupo' : 'grupos'} más</div>`;
   }
   html += '</div>';
   return html;
@@ -406,7 +408,7 @@ function selectAnswer(ans, idx) {
       document.querySelectorAll('.answer-btn').forEach(b => b.disabled = true);
       if (correctBtn) correctBtn.classList.add('correct');
       const correctDots = buildDotGrid(ch.correct, 'dot-blue');
-      setFeedback(`❌ 3 errores — ¡sin avance este turno! La correcta era ${ch.correct}<div style="margin-top:4px;">${correctDots}</div>`, 'err', 3000);
+      setFeedback(`❌ 3 errores — ¡sin avance este turno! La correcta era ${ch.correct}<div class="mt-1">${correctDots}</div>`, 'err', 3000);
       updatePenaltyHearts();
       getHaikuComment('blocked', ch.n1, ch.op, ch.n2, ch.correct, 0);
     } else {

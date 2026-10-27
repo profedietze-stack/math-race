@@ -151,7 +151,7 @@ try {
   <!-- Divider -->
   <div class="home-divider">
     <div class="home-divider-line"></div>
-    <span class="home-divider-star">✦</span>
+    <span class="home-divider-star" aria-hidden="true">✦</span>
     <div class="home-divider-line"></div>
   </div>
 
@@ -204,30 +204,30 @@ try {
 
 <!-- Music toggle + Accesibilidad (global, fixed) -->
 <button class="music-toggle is-music-btn" id="musicToggle" onclick="toggleMusic()" title="Música" aria-label="Silenciar o activar el sonido">🎵</button>
-<button class="music-toggle" id="a11yToggle" style="right:66px;" onclick="showA11yPanel()" title="Accesibilidad" aria-label="Accesibilidad y volumen">⚙️</button>
+<button class="music-toggle" id="a11yToggle" onclick="showA11yPanel()" title="Accesibilidad" aria-label="Accesibilidad y volumen">⚙️</button>
 
 <!-- ══════ PANEL DE ACCESIBILIDAD ══════ -->
 <div class="modal-overlay" id="a11yModal">
-  <div class="modal-box" style="padding:24px 20px;text-align:left;">
-    <div class="modal-title" style="font-size:1.3rem;text-align:center;">⚙️ Accesibilidad</div>
-    <div style="display:flex;flex-direction:column;gap:14px;margin-top:10px;">
-      <label style="display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:800;font-size:0.9rem;">
+  <div class="modal-box-compacto texto-izq modal-box">
+    <div class="modal-title-md modal-title">⚙️ Accesibilidad</div>
+    <div class="ajuste-lista">
+      <label class="ajuste-fila">
         Alto contraste
         <input type="checkbox" id="a11yContrast" onchange="toggleA11y('contrast', this.checked)">
       </label>
-      <label style="display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:800;font-size:0.9rem;">
+      <label class="ajuste-fila">
         Reducir animaciones
         <input type="checkbox" id="a11yMotion" onchange="toggleA11y('reduceMotion', this.checked)">
       </label>
-      <label style="display:flex;flex-direction:column;gap:6px;font-weight:800;font-size:0.9rem;">
+      <label class="ajuste-col">
         Tamaño de texto
         <input type="range" id="a11yFontSize" min="0" max="2" step="1" value="0" oninput="setA11yFontSize(this.value)">
       </label>
-      <label style="display:flex;flex-direction:column;gap:6px;font-weight:800;font-size:0.9rem;">
+      <label class="ajuste-col">
         🎵 Volumen música
         <input type="range" id="musicVolumeRange" min="0" max="100" step="10" value="80" oninput="setMusicVolume(this.value)">
       </label>
-      <label style="display:flex;flex-direction:column;gap:6px;font-weight:800;font-size:0.9rem;">
+      <label class="ajuste-col">
         🔊 Volumen efectos
         <input type="range" id="sfxVolumeRange" min="0" max="100" step="10" value="80" oninput="setSfxVolume(this.value)">
       </label>
@@ -240,10 +240,10 @@ try {
 
 <!-- ══════ PASAR DISPOSITIVO (vs Amigos) ══════ -->
 <div class="modal-overlay" id="passDeviceModal">
-  <div class="modal-box" style="padding:30px 22px;">
+  <div class="modal-box-holgado modal-box">
     <div class="modal-emoji" id="passDeviceEmoji">🐉</div>
-    <div class="modal-title" style="font-size:1.15rem;margin-bottom:6px;">Pasale el dispositivo a</div>
-    <div style="font-size:1.7rem;font-weight:900;margin-bottom:18px;" id="passDeviceName">Jugador</div>
+    <div class="modal-title-sm modal-title">Pasale el dispositivo a</div>
+    <div class="pase-nombre" id="passDeviceName">Jugador</div>
     <div class="modal-actions">
       <button class="modal-btn modal-btn-primary" onclick="confirmPassDevice()">📱 ¡Listo, es mi turno!</button>
     </div>
@@ -346,7 +346,7 @@ try {
     <div class="sec-title">💾 Partidas Guardadas</div>
   </div>
   <div class="secondary-screen-inner" id="continueContent">
-    <p style="color:var(--text-muted); text-align:center; margin-top:20px;">No hay partidas guardadas</p>
+    <p class="nota-vacia">No hay partidas guardadas</p>
   </div>
 </div>
 
@@ -371,10 +371,10 @@ try {
 
 <!-- ══════ EXIT MODAL ══════ -->
 <div class="modal-overlay" id="exitModal">
-  <div class="modal-box" style="padding:24px 20px;">
+  <div class="modal-box-compacto modal-box">
     <div class="modal-emoji">🏁</div>
-    <div class="modal-title" style="font-size:1.4rem;">¿Salir de la carrera?</div>
-    <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:16px;">La carrera termina acá. Lo que respondiste queda guardado en tus estadísticas.</p>
+    <div class="modal-title-md modal-title">¿Salir de la carrera?</div>
+    <p class="modal-texto">La carrera termina acá. Lo que respondiste queda guardado en tus estadísticas.</p>
     <div class="modal-actions">
       <button class="modal-btn modal-btn-primary" onclick="exitConfirm()">Sí, salir</button>
       <button class="modal-btn modal-btn-secondary" onclick="exitCancel()">Seguir jugando</button>

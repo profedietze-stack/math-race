@@ -205,8 +205,8 @@ function renderAchievements() {
   const weakestOp = getWeakestOp();
   const globalAccuracy = stats.total > 0 ? Math.round((stats.correct / stats.total) * 100) : null;
 
-  let html = `<div style="grid-column:1/-1;font-size:0.72rem;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;">Tus Estadísticas</div>`;
-  html += `<div class="info-card" style="grid-column:1/-1;">`;
+  let html = `<div class="rotulo-seccion rotulo-seccion-primero">Tus Estadísticas</div>`;
+  html += `<div class="fila-entera info-card">`;
   if (stats.races === 0) {
     html += `<p>Todavía no jugaste ninguna carrera. ¡Arrancá para ver tus estadísticas acá!</p>`;
   } else {
@@ -221,7 +221,7 @@ function renderAchievements() {
   // Historial semanal: últimos 7 días de precisión
   const weekly = getWeeklyStats();
   const dayLetters = ['D','L','M','M','J','V','S'];
-  html += `<div class="info-card" style="grid-column:1/-1;">
+  html += `<div class="fila-entera info-card">
     <h3>📈 Últimos 7 días</h3>
     <div class="weekly-chart">
       ${weekly.map(d => {
@@ -239,7 +239,7 @@ function renderAchievements() {
     </div>
   </div>`;
 
-  html += `<div style="grid-column:1/-1;font-size:0.72rem;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin:14px 0 4px;">Logros</div>`;
+  html += `<div class="rotulo-seccion">Logros</div>`;
   html += ACHIEVS.map(a => `
     <div class="achiev-card ${state.achievements[a.id] ? 'unlocked' : 'locked'}">
       <div class="achiev-icon">${a.icon}</div>
@@ -248,15 +248,15 @@ function renderAchievements() {
     </div>
   `).join('');
 
-  html += `<div style="grid-column:1/-1;font-size:0.72rem;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin:14px 0 4px;">Corredores desbloqueados</div>`;
+  html += `<div class="rotulo-seccion">Corredores desbloqueados</div>`;
   html += STICKERS.map(s => {
     const isUnlocked = unlocked.includes(s.id);
     return `
-      <div class="achiev-card ${isUnlocked ? 'unlocked' : 'locked'}" style="position:relative;">
+      <div class="achiev-card ${isUnlocked ? 'unlocked' : 'locked'}">
         <div class="achiev-icon">${s.emoji}</div>
         <div class="achiev-name">${s.name}</div>
         <div class="achiev-desc">${s.unlockLevel === 0 ? 'Libre' : (isUnlocked ? `Desbloqueado ✓` : `Superá el nivel ${s.unlockLevel}`)}</div>
-        ${!isUnlocked ? `<div style="position:absolute;top:6px;right:8px;font-size:0.7rem;">🔒</div>` : ''}
+        ${!isUnlocked ? `<div class="candado">🔒</div>` : ''}
       </div>
     `;
   }).join('');

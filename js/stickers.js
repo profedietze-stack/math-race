@@ -21,7 +21,7 @@ function showStickerPick(mode) {
           <div class="spick-preview-name" id="spickPreviewName">Cohete</div>
           <div class="spick-preview-sub">Tu corredor en la carrera</div>
         </div>
-        <button class="start-race-btn" style="margin-top:0;flex-shrink:0;width:auto;padding:12px 20px;" onclick="startVsAI()">¡Correr! 🏁</button>
+        <button class="btn-en-linea start-race-btn" onclick="startVsAI()">¡Correr! 🏁</button>
       </div>
     `;
     const grid = document.getElementById('aiStickerGrid');
@@ -107,7 +107,7 @@ function renderHumanSetup() {
   const canAdd = state.humanPlayers.length < 4;
   if (canAdd) html += `<button class="add-player-btn" onclick="addHumanPlayer()">＋ Agregar jugador</button>`;
 
-  html += `<button class="start-race-btn" onclick="startHumanRace()" style="margin-top:4px;">🚀 ¡Comenzar Carrera!</button>`;
+  html += `<button class="mt-1 start-race-btn" onclick="startHumanRace()">🚀 ¡Comenzar Carrera!</button>`;
   body.innerHTML = html;
 }
 
