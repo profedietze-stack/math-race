@@ -472,6 +472,7 @@ body {
   font-family: 'Nunito', sans-serif;
   font-weight: 800;
   font-size: clamp(0.9rem, 3.2vw, 1.05rem);
+  color: var(--white); /* sin esto los subtítulos heredaban el negro del navegador */
   transition: transform 0.14s ease, box-shadow 0.14s ease, filter 0.14s;
   text-align: left;
   position: relative;
@@ -503,10 +504,11 @@ body {
 .menu-btn .btn-icon { font-size: 1.5rem; flex-shrink: 0; }
 .menu-btn .btn-text { display: flex; flex-direction: column; gap: 2px; }
 .menu-btn .btn-label { color: var(--white); line-height: 1; }
-.menu-btn .btn-sub   { font-size: 0.68rem; opacity: 0.72; font-weight: 700; line-height: 1; }
+.menu-btn .btn-sub   { font-size: 0.68rem; opacity: 0.92; font-weight: 700; line-height: 1; }
 
+/* Degradés oscurecidos para que el blanco llegue a 4,5:1 (tests/contraste). */
 .btn-ai {
-  background: linear-gradient(130deg, #ff6b35 0%, #f72585 100%);
+  background: linear-gradient(130deg, #c2410c 0%, #be185d 100%);
   box-shadow: 0 5px 22px rgba(255,107,53,0.38), inset 0 1px 0 rgba(255,255,255,0.15);
 }
 .btn-human {
@@ -514,7 +516,7 @@ body {
   box-shadow: 0 5px 22px rgba(91,33,182,0.38), inset 0 1px 0 rgba(255,255,255,0.15);
 }
 .btn-continue {
-  background: linear-gradient(130deg, #047857 0%, #0891b2 100%);
+  background: linear-gradient(130deg, #047857 0%, #0e7490 100%);
   box-shadow: 0 5px 18px rgba(4,120,87,0.3), inset 0 1px 0 rgba(255,255,255,0.12);
 }
 
@@ -565,7 +567,10 @@ body {
 }
 
 .level-badge {
-  background: linear-gradient(135deg, var(--purple), var(--pink));
+  /* Colores fijos: el modo alto contraste aclara --purple y el blanco dejaba
+     de leerse. Ambas paradas ≥ 4,5:1 con blanco (tests/contraste). */
+  background: linear-gradient(135deg, #7c3aed, #be185d);
+  color: var(--white);
   padding: 6px 14px;
   border-radius: 20px;
   font-weight: 800;
@@ -763,7 +768,7 @@ body {
 .subtraction-caption {
   font-size: 0.75rem;
   font-weight: 800;
-  color: var(--red);
+  color: #fca5a5; /* --red sobre la tarjeta daba 3,8:1 */
   letter-spacing: 0.3px;
 }
 
@@ -1462,7 +1467,7 @@ body.a11y-contrast .lane {
 .profile-delete-btn { width: 36px; height: 36px; top: 4px; right: 4px; }
 .btn-sub { font-size: 0.78rem; }
 .home-subtitle { font-size: clamp(0.78rem, 2.8vw, 0.9rem); color: rgba(165,180,252,0.8); }
-.profe-text { font-size: 0.8rem; color: rgba(165,180,252,0.7); }
+.profe-text { font-size: 0.8rem; color: rgba(165,180,252,0.9); }
 .answer-dot-extra { font-size: 0.75rem; }
 :focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
 /* Los botones flotantes (🎵 ⚙️) miden 44 px y viven arriba a la derecha: en

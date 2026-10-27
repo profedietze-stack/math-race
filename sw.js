@@ -10,7 +10,7 @@
 // el aviso de actualización (ver index.html).
 // ============================================================
 
-const CACHE_NAME = 'math-race-v18';
+const CACHE_NAME = 'math-race-v19';
 
 // Recursos a pre-cachear en la instalación
 const PRECACHE = [
