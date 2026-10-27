@@ -1,9 +1,16 @@
 // ============================================================
 // SERVICE WORKER — Math Race
-// Estrategia: Cache-first para assets, Network-first para nada
+// Estrategia: cache-first para TODO, HTML incluido.
+//
+// La regla general es HTML network-first, pero esa regla supone assets con
+// hash en el nombre. Acá los scripts se llaman siempre igual (js/challenge.js),
+// así que un HTML nuevo traído de la red cargaría los JS viejos de la caché:
+// dos versiones mezcladas. Con todo cache-first, cada versión del SW sirve una
+// foto coherente del juego, y la nueva entra entera cuando el usuario acepta
+// el aviso de actualización (ver index.html).
 // ============================================================
 
-const CACHE_NAME = 'math-race-v10';
+const CACHE_NAME = 'math-race-v11';
 
 // Recursos a pre-cachear en la instalación
 const PRECACHE = [

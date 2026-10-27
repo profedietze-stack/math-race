@@ -1,6 +1,17 @@
 // ═══════════════════════════════════════
 //  WIN / RESULTS
 // ═══════════════════════════════════════
+// Contra la IA el jugador es el índice 0 y se le habla de vos a vos. En vs
+// Amigos el dispositivo lo miran todos: se nombra a quien ganó, siempre con
+// trofeo (ganó alguien de la ronda, no "perdió el dispositivo").
+function tituloDeResultado(mode, winnerIdx, dragons) {
+  const nombre = (dragons[winnerIdx] && dragons[winnerIdx].name) || '';
+  if (mode === 'human') return { emoji: '🏆', titulo: `¡Ganó ${nombre}!` };
+  return winnerIdx === 0
+    ? { emoji: '🏆', titulo: '¡Ganaste!' }
+    : { emoji: '😅', titulo: `¡Ganó ${nombre}!` };
+}
+
 function endRace(winnerIdx) {
   state.gameActive = false;
 
@@ -21,8 +32,9 @@ function endRace(winnerIdx) {
   });
 
   const playerWon = winnerIdx === 0;
-  document.getElementById('resultEmoji').textContent = playerWon ? '🏆' : '😅';
-  document.getElementById('resultTitle').textContent = playerWon ? '¡Ganaste!' : `¡Ganó ${state.dragons[winnerIdx].name}!`;
+  const { emoji, titulo } = tituloDeResultado(state.mode, winnerIdx, state.dragons);
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultTitle').textContent = titulo;
 
   // Reset streak if player lost
   if (state.mode === 'ai' && !playerWon) {
@@ -247,5 +259,5 @@ function renderAchievements() {
 
 // ── Exports condicionales para tests en Node (no afecta al navegador) ──
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { exitConfirm, exitCancel, unlockAchievement };
+  module.exports = { exitConfirm, exitCancel, unlockAchievement, tituloDeResultado };
 }

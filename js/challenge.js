@@ -104,8 +104,12 @@ function proceedToNextChallenge(delay = 0) {
 
 // ── Exports condicionales para tests en Node (no afecta al navegador) ──
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { generateChallenge, buildRemovalDotGrid, buildGroupsDotGrid, buildSharingDotGrid, selectAnswer };
+  module.exports = { generateChallenge, buildRemovalDotGrid, buildGroupsDotGrid, buildSharingDotGrid, selectAnswer, hayRivales };
 }
+
+// Práctica y Desafío Diario se corren solos: ahí la bola de fuego no tiene a
+// quién pegarle, así que no se ofrece.
+function hayRivales(dragons) { return Array.isArray(dragons) && dragons.length > 1; }
 
 function renderChallenge(isFireball = false) {
   const ch = state.currentChallenge;
@@ -170,7 +174,7 @@ function renderChallenge(isFireball = false) {
 
     <div class="action-row">
       <button class="action-btn btn-move" onclick="doMove()">🏁 Avanzar</button>
-      <button class="action-btn btn-fire" onclick="doFireball()">🔥 Bola de fuego</button>
+      ${hayRivales(state.dragons) ? `<button class="action-btn btn-fire" onclick="doFireball()">🔥 Bola de fuego</button>` : ''}
     </div>
 
     <div class="ai-response" id="aiComment">

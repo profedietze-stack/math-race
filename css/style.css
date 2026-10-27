@@ -17,6 +17,10 @@
   --radius: 18px;
 }
 
+/* El zoom con dos dedos está permitido (accesibilidad); esto sólo evita que
+   un doble toque rápido en un botón agrande la página en plena carrera. */
+button, input, [onclick] { touch-action: manipulation; }
+
 body {
   font-family: 'Nunito', sans-serif;
   background: var(--bg);
@@ -882,10 +886,13 @@ body {
 /* Action Buttons */
 .action-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* 2 columnas con bola de fuego, 1 a todo el ancho sin rivales */
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
   gap: 6px;
 }
 .action-btn {
+  min-height: 44px; /* objetivo táctil mínimo */
   padding: 9px 6px;
   border: none;
   border-radius: 10px;

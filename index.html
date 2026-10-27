@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Math Race ⚡</title>
 <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="css/fuentes.css">
@@ -371,7 +371,7 @@ try {
   <div class="modal-box" style="padding:24px 20px;">
     <div class="modal-emoji">🏁</div>
     <div class="modal-title" style="font-size:1.4rem;">¿Salir de la carrera?</div>
-    <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:16px;">Tu progreso en esta carrera se perderá.</p>
+    <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:16px;">La carrera termina acá. Lo que respondiste queda guardado en tus estadísticas.</p>
     <div class="modal-actions">
       <button class="modal-btn modal-btn-primary" onclick="exitConfirm()">Sí, salir</button>
       <button class="modal-btn modal-btn-secondary" onclick="exitCancel()">Seguir jugando</button>
@@ -427,15 +427,23 @@ function notifyUpdateAvailable(reg) {
   const el = document.getElementById('toastEl');
   if (el) {
     el.style.cursor = 'pointer';
+    // No recargar acá: el SW nuevo todavía no tomó el control y la página
+    // volvería a abrir con el viejo (había que tocar el aviso dos veces).
+    // La recarga la hace `controllerchange`, abajo.
     el.onclick = () => {
       if (reg.waiting) reg.waiting.postMessage('skipWaiting');
-      window.location.reload();
+      else window.location.reload();
     };
   }
 }
+// Sólo si ya había un SW: en la primera visita también cambia el controlador
+// (se instala por primera vez) y ahí recargar sería un parpadeo sin sentido.
+var _habiaControladorSW = !!(navigator.serviceWorker && navigator.serviceWorker.controller);
 navigator.serviceWorker && navigator.serviceWorker.addEventListener && navigator.serviceWorker.addEventListener('controllerchange', () => {
   // Evita loops de recarga si el navegador dispara el evento más de una vez
-  if (!window._swReloaded) { window._swReloaded = true; }
+  if (!_habiaControladorSW || window._swReloaded) return;
+  window._swReloaded = true;
+  window.location.reload();
 });
 </script>
 </body>
