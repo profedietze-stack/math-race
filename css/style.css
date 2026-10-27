@@ -1445,3 +1445,40 @@ body.a11y-contrast .lane {
   position: relative;
   z-index: 1;
 }
+
+/* ═══════════════════════════════════════
+   ACCESIBILIDAD: objetivos táctiles y legibilidad
+   Todo lo que se toca mide al menos 44 px (WCAG 2.5.5 / guías de Apple y
+   Google), y ningún texto que haya que leer baja de 12 px. Va al final para
+   ganarles a las reglas de cada componente sin tocarlas una por una.
+   ═══════════════════════════════════════ */
+.profile-pill {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.8rem;
+  min-height: 44px;
+  padding: 8px 18px;
+  color: rgba(226,232,255,0.85);
+}
+.hplayer-sticker {
+  background: none;
+  border: none;
+  padding: 0;
+  min-width: 44px;
+  min-height: 44px;
+  font-family: inherit;
+}
+.music-toggle { width: 44px; height: 44px; }
+.music-toggle.header-icon { width: 44px; height: 44px; font-size: 1rem; }
+.exit-btn, .back-btn, .hplayer-input { min-height: 44px; }
+.hplayer-mini-btn { min-width: 44px; min-height: 44px; }
+.profile-delete-btn { width: 36px; height: 36px; top: 4px; right: 4px; }
+.btn-sub { font-size: 0.78rem; }
+.home-subtitle { font-size: clamp(0.78rem, 2.8vw, 0.9rem); color: rgba(165,180,252,0.8); }
+.profe-text { font-size: 0.8rem; color: rgba(165,180,252,0.7); }
+.answer-dot-extra { font-size: 0.75rem; }
+:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+/* Los botones flotantes (🎵 ⚙️) miden 44 px y viven arriba a la derecha: en
+   pantallas angostas el título tiene que empezar debajo de ellos. */
+@media (max-width: 520px) {
+  .home-hero { padding-top: 64px; }
+}

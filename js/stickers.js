@@ -83,7 +83,7 @@ function renderHumanSetup() {
     html += `
       <div class="hplayer-card" id="hcard-${i}">
         <div class="hplayer-top">
-          <span class="hplayer-sticker" onclick="toggleMiniPicker(${i})">${s.emoji}</span>
+          <button type="button" class="hplayer-sticker" onclick="toggleMiniPicker(${i})" aria-label="Cambiar corredor del jugador ${i+1}" aria-expanded="false">${s.emoji}</button>
           <input type="text" class="hplayer-input" id="hname-${i}"
             placeholder="${isOpt ? `Jugador ${i+1} (opcional)` : `Jugador ${i+1}`}"
             value="${escapeHtml(p.name)}" maxlength="14"
@@ -96,7 +96,7 @@ function renderHumanSetup() {
             const sel = st.id === p.stickerId;
             return `<button class="hplayer-mini-btn ${sel?'sel-mini':''} ${!uk?'locked-mini':''}"
               ${!uk ? 'disabled' : `onclick="pickHumanSticker(${i},'${st.id}')"`}
-              title="${st.name}${!uk?' ('+st.hint+')':''}">${st.emoji}</button>`;
+              title="${st.name}${!uk?' ('+st.hint+')':''}" aria-label="${st.name}${!uk?', bloqueado: '+st.hint:''}">${st.emoji}</button>`;
           }).join('')}
         </div>
       </div>
@@ -113,7 +113,9 @@ function renderHumanSetup() {
 
 function toggleMiniPicker(i) {
   const grid = document.getElementById(`hmini-${i}`);
-  grid.classList.toggle('open');
+  const abierto = grid.classList.toggle('open');
+  const btn = document.querySelector(`#hcard-${i} .hplayer-sticker`);
+  if (btn) btn.setAttribute('aria-expanded', abierto ? 'true' : 'false');
   playClick();
 }
 

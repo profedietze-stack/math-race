@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Math Race ⚡</title>
 <link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#0f0c29">
   <link rel="stylesheet" href="css/fuentes.css">
 <link rel="stylesheet" href="css/style.css">
 <script>
@@ -142,7 +145,7 @@ try {
       <div class="home-title-line2">RACE</div>
     </div>
     <div class="home-subtitle">Resolvé · Competí · Ganá</div>
-    <div class="profile-pill" onclick="playClick();showProfileScreen()">👤 <span id="activeProfileName">Elegir jugador</span></div>
+    <button type="button" class="profile-pill" onclick="playClick();showProfileScreen()">👤 <span id="activeProfileName">Elegir jugador</span></button>
   </div>
 
   <!-- Divider -->
@@ -200,8 +203,8 @@ try {
 </div>
 
 <!-- Music toggle + Accesibilidad (global, fixed) -->
-<button class="music-toggle is-music-btn" id="musicToggle" onclick="toggleMusic()" title="Música">🎵</button>
-<button class="music-toggle" id="a11yToggle" style="right:62px;" onclick="showA11yPanel()" title="Accesibilidad">⚙️</button>
+<button class="music-toggle is-music-btn" id="musicToggle" onclick="toggleMusic()" title="Música" aria-label="Silenciar o activar el sonido">🎵</button>
+<button class="music-toggle" id="a11yToggle" style="right:66px;" onclick="showA11yPanel()" title="Accesibilidad" aria-label="Accesibilidad y volumen">⚙️</button>
 
 <!-- ══════ PANEL DE ACCESIBILIDAD ══════ -->
 <div class="modal-overlay" id="a11yModal">
@@ -255,8 +258,8 @@ try {
   <div class="game-header">
     <div class="level-badge" id="levelBadge">Nivel 1 / 10</div>
     <div class="game-header-actions">
-      <button class="music-toggle header-icon is-music-btn" id="musicToggleGame" onclick="toggleMusic()" title="Música">🎵</button>
-      <button class="music-toggle header-icon" id="a11yToggleGame" onclick="showA11yPanel()" title="Accesibilidad">⚙️</button>
+      <button class="music-toggle header-icon is-music-btn" id="musicToggleGame" onclick="toggleMusic()" title="Música" aria-label="Silenciar o activar el sonido">🎵</button>
+      <button class="music-toggle header-icon" id="a11yToggleGame" onclick="showA11yPanel()" title="Accesibilidad" aria-label="Accesibilidad y volumen">⚙️</button>
       <button class="exit-btn" onclick="exitGame()">✕ Salir</button>
     </div>
   </div>

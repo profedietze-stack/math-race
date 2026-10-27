@@ -71,7 +71,7 @@ function renderProfileScreen() {
           <span class="profile-avatar">🧒</span>
           <span class="profile-name">${escapeHtml(p.name)}</span>
         </button>
-        <button class="profile-delete-btn" onclick="confirmDeleteProfile('${p.id}')" title="Eliminar perfil">🗑</button>
+        <button class="profile-delete-btn" onclick="confirmDeleteProfile('${p.id}')" title="Eliminar perfil" aria-label="Eliminar a ${escapeHtml(p.name)}">🗑</button>
       </div>
     `;
   });

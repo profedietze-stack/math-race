@@ -10,7 +10,7 @@
 // el aviso de actualización (ver index.html).
 // ============================================================
 
-const CACHE_NAME = 'math-race-v13';
+const CACHE_NAME = 'math-race-v15';
 
 // Recursos a pre-cachear en la instalación
 const PRECACHE = [
@@ -32,6 +32,10 @@ const PRECACHE = [
   './js/audio.js',
   './js/main.js',
   './manifest.json',
+  './icons/icon-192.png',
+  './icons/icon-512.png',
+  './icons/apple-touch-icon.png',
+  './icons/favicon-32.png',
   './css/fuentes.css',
 
   // Tipografías: sólo los subconjuntos latinos, que es lo que el castellano
