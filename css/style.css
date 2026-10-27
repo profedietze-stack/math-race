@@ -1482,3 +1482,90 @@ body.a11y-contrast .lane {
 @media (max-width: 520px) {
   .home-hero { padding-top: 64px; }
 }
+
+/* ═══════════════════════════════════════
+   CARRERA: la cuenta manda
+   La pista es contexto; lo que el chico tiene que mirar es la cuenta. Antes
+   la pista se llevaba entre el 40 y el 63 % de la pantalla, la cuenta medía
+   25 px y en un celular de 320-360 px la zona de respuestas tenía scroll
+   interno (se cortaban opciones o el botón «Avanzar»).
+   ═══════════════════════════════════════ */
+.race-track-wrapper { flex: 0 1 auto; gap: 4px; padding: 8px 12px 4px; }
+.lane { flex: 0 0 auto; min-height: 46px; height: clamp(46px, 7vh, 58px); }
+.dragon-emoji { font-size: 1.5rem; }
+.dragon-label { font-size: 0.68rem; }
+
+.challenge-zone {
+  flex: 1 1 auto;
+  max-height: none;
+  justify-content: space-evenly;
+  gap: 8px;
+  padding: 10px 14px 12px;
+}
+/* En pantallas anchas, el contenido no se estira de lado a lado */
+.challenge-zone > * { width: 100%; max-width: 640px; margin-left: auto; margin-right: auto; }
+
+.big-number { font-size: clamp(2.1rem, 8vw, 3.2rem); }
+.math-operator { font-size: clamp(2.1rem, 8vw, 3.2rem); margin-bottom: 0; }
+.math-equals { color: var(--text-muted); }
+.math-unknown {
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 800;
+  font-size: clamp(2.1rem, 8vw, 3.2rem);
+  line-height: 1;
+  color: var(--yellow);
+  min-width: 1.2em;
+  text-align: center;
+  border-bottom: 3px dashed rgba(255,214,10,0.6);
+}
+.visual-math { gap: clamp(6px, 2vw, 14px); flex-wrap: wrap; }
+
+.answer-btn { min-height: 64px; }
+.answer-number { font-size: clamp(1.5rem, 6vw, 2rem); }
+.ai-response { font-size: 0.88rem; min-height: 36px; line-height: 1.3; }
+.word-problem { font-size: 0.95rem; }
+
+.level-badge {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  font-size: 0.8rem;
+}
+.game-header { gap: 8px; padding: 8px 12px; }
+
+/* Celular apaisado: no hay alto para apilar pista y cuenta. Pista a la
+   izquierda, cuenta a la derecha. */
+@media (orientation: landscape) and (max-height: 500px) {
+  #gameScreen.active {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  #gameScreen .game-header { grid-column: 1 / -1; }
+  #gameScreen .race-track-wrapper { overflow-y: auto; }
+  #gameScreen .lane { height: 40px; min-height: 40px; }
+  #gameScreen .challenge-zone { border-top: none; border-left: 1px solid rgba(124,58,237,0.3); overflow-y: auto; justify-content: flex-start; gap: 6px; padding: 6px 10px; }
+  #gameScreen .big-number, #gameScreen .math-operator, #gameScreen .math-unknown { font-size: 1.8rem; }
+  #gameScreen .answer-btn { min-height: 48px; }
+  #gameScreen .answer-dots { display: none; }
+}
+
+/* Ajuste fino de la carrera para que la cuenta entre entera sin scroll,
+   aun con enunciado, en 320×568 y 360×640. */
+.dragon-runner { flex-direction: row; gap: 4px; }
+.dragon-label { margin-top: 0; }
+.lane { height: clamp(40px, 6.5vh, 56px); min-height: 40px; }
+@media (max-height: 700px) and (orientation: portrait) {
+  .answer-btn { min-height: 54px; padding: 5px 6px; gap: 2px; }
+  .answer-dot { width: 6px; height: 6px; }
+  .challenge-zone { gap: 6px; padding: 8px 12px 10px; }
+  .word-problem { font-size: 0.88rem; padding: 6px 9px; }
+  .big-number, .math-operator, .math-unknown { font-size: 2rem; }
+  .dot { width: 7px; height: 7px; }
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  #gameScreen .answers-grid { grid-template-columns: repeat(4, 1fr); }
+  #gameScreen .game-header { padding: 4px 12px; }
+  #gameScreen .word-problem { font-size: 0.82rem; padding: 4px 8px; }
+}

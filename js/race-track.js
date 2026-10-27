@@ -27,7 +27,7 @@ function launchGame() {
 function updateLevelBadge() {
   const badge = document.getElementById('levelBadge');
   if (state.mode === 'ai') {
-    badge.textContent = `Nivel ${state.level} / 10 — ${LEVELS[state.level-1].name}`;
+    badge.textContent = `Nivel ${state.level}/10 · ${LEVELS[state.level-1].name}`;
   } else if (state.mode === 'practice') {
     badge.textContent = '🎯 Modo Práctica';
   } else if (state.mode === 'daily') {

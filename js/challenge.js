@@ -233,6 +233,8 @@ function renderChallenge(isFireball = false) {
           <div class="big-number num-b">${ch.n2}</div>
         </div>
       `}
+      <div class="math-operator math-equals" aria-hidden="true">=</div>
+      <div class="math-unknown" aria-label="respuesta">?</div>
     </div>
 
     <div class="answers-grid" id="answersGrid"></div>
