@@ -10,7 +10,7 @@
 // el aviso de actualización (ver index.html).
 // ============================================================
 
-const CACHE_NAME = 'math-race-v19';
+const CACHE_NAME = 'math-race-v20';
 
 // Recursos a pre-cachear en la instalación
 const PRECACHE = [
@@ -42,13 +42,9 @@ const PRECACHE = [
   // necesita. Sin esto el juego se abría con la letra del sistema la primera
   // vez que se usaba sin internet — no da error, simplemente se ve distinto de
   // como el docente lo mostró en clase, y no hay forma de saber por qué.
-  './fonts/baloo-2-400-latin.woff2',
-  './fonts/baloo-2-700-latin.woff2',
-  './fonts/baloo-2-800-latin.woff2',
-  './fonts/nunito-400-latin.woff2',
-  './fonts/nunito-700-latin.woff2',
-  './fonts/nunito-800-latin.woff2',
-  './fonts/nunito-900-latin.woff2',
+  // Fuentes variables: un archivo por familia sirve todos los grosores.
+  './fonts/baloo-2-latin.woff2',
+  './fonts/nunito-latin.woff2',
 
   // Tone.js viaja con el juego desde que se sacaron los recursos de terceros.
   // Se cargaba a demanda y sin precachear, así que la primera vez que hacía
