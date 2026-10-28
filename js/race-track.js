@@ -24,10 +24,44 @@ function launchGame() {
   else loadChallenge();
 }
 
+// La carrera no tiene scroll. Las medidas del CSS siguen al alto de la pantalla,
+// pero lo que hay que mostrar varía (enunciado de 3 líneas, comentario largo,
+// dibujo de la división): si la zona de cuenta se desborda, se achica por pasos
+// —primero lo que acompaña, al final el dibujo— y nunca se esconde la cuenta.
+function ajustarAlto() {
+  const zona = document.getElementById('challengeZone');
+  if (!zona || !zona.offsetParent) return;
+  zona.classList.remove('compacto', 'minimo');
+  for (const paso of ['compacto', 'minimo']) {
+    if (zona.scrollHeight <= zona.clientHeight + 1) break;
+    zona.classList.add(paso);
+  }
+}
+
+function iniciarAjusteAlto() {
+  const zona = document.getElementById('challengeZone');
+  if (!zona || typeof MutationObserver === 'undefined') return;
+  let pendiente = false;
+  const pedir = () => {
+    if (pendiente) return;
+    pendiente = true;
+    requestAnimationFrame(() => { pendiente = false; ajustarAlto(); });
+  };
+  // Solo contenido (no atributos): ajustarAlto cambia clases y no se re-dispara.
+  new MutationObserver(pedir).observe(zona, { childList: true, subtree: true, characterData: true });
+  window.addEventListener('resize', pedir);
+}
+
 function updateLevelBadge() {
   const badge = document.getElementById('levelBadge');
   if (state.mode === 'ai') {
-    badge.textContent = `Nivel ${state.level}/10 · ${LEVELS[state.level-1].name}`;
+    // El nombre del nivel va aparte: en un celular angosto no entra junto a los
+    // botones y el CSS lo esconde (el número del nivel queda siempre).
+    badge.textContent = `Nivel ${state.level}/10`;
+    const nombre = document.createElement('span');
+    nombre.className = 'nivel-nombre';
+    nombre.textContent = ` · ${LEVELS[state.level-1].name}`;
+    badge.appendChild(nombre);
   } else if (state.mode === 'practice') {
     badge.textContent = '🎯 Modo Práctica';
   } else if (state.mode === 'daily') {
@@ -148,4 +182,9 @@ function triggerExplosion(runnerEl) {
     wrapper.remove();
     runnerEl.classList.remove('runner-hit');
   }, 900);
+}
+
+// ── Exports condicionales para tests en Node (no afecta al navegador) ──
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { ajustarAlto };
 }

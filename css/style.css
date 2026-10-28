@@ -608,9 +608,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden; /* la carrera no tiene scroll: las pistas se angostan (ver CARRERA SIN SCROLL) */
   min-height: 0;
 }
 
@@ -683,11 +681,10 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  /* Hard cap so the track always stays visible; scrollable en vez de cortar contenido */
-  max-height: 52vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
+  min-height: 0;
+  /* Sin scroll: lo que no entra se achica por pasos (.compacto / .minimo, ver
+     ajustarAlto en race-track.js), no se esconde detrás de una barra. */
+  overflow: hidden;
 }
 
 .challenge-header {
@@ -1536,9 +1533,7 @@ body.a11y-contrast .lane {
     grid-template-rows: auto minmax(0, 1fr);
   }
   #gameScreen .game-header { grid-column: 1 / -1; }
-  #gameScreen .race-track-wrapper { overflow-y: auto; }
-  #gameScreen .lane { height: 40px; min-height: 40px; }
-  #gameScreen .challenge-zone { border-top: none; border-left: 1px solid rgba(124,58,237,0.3); overflow-y: auto; justify-content: flex-start; gap: 6px; padding: 6px 10px; }
+  #gameScreen .challenge-zone { border-top: none; border-left: 1px solid rgba(124,58,237,0.3); justify-content: flex-start; gap: 6px; padding: 6px 10px; }
   #gameScreen .big-number, #gameScreen .math-operator, #gameScreen .math-unknown { font-size: 1.8rem; }
   #gameScreen .answer-btn { min-height: 48px; }
   #gameScreen .answer-dots { display: none; }
@@ -1561,6 +1556,57 @@ body.a11y-contrast .lane {
   #gameScreen .answers-grid { grid-template-columns: repeat(4, 1fr); }
   #gameScreen .game-header { padding: 4px 12px; }
   #gameScreen .word-problem { font-size: 0.82rem; padding: 4px 8px; }
+}
+
+/* ═══════════════════════════════════════
+   CARRERA SIN SCROLL
+   Ni la pista ni la cuenta ni las respuestas se desplazan: todo entra en la
+   pantalla. Las pistas son angostas y se reparten el alto (con cuatro, que es
+   el máximo, no pueden comerse la cuenta); la zona de cuenta usa medidas que
+   siguen al alto del celular, y si aun así algo no entra, ajustarAlto()
+   (race-track.js) le agrega .compacto y después .minimo.
+   Va al final de las reglas de carrera para ganarles por orden.
+   ═══════════════════════════════════════ */
+.game-header { padding: 4px 12px; }
+.race-track-wrapper { flex: 0 0 auto; gap: 3px; padding: 6px 12px 4px; }
+.lane {
+  flex: 0 0 auto;
+  height: clamp(28px, 4.8dvh, 44px);
+  min-height: 0;
+  border-radius: 10px;
+}
+.progress-fill { border-radius: 10px; }
+.dragon-emoji { font-size: clamp(1.05rem, 2.7dvh, 1.5rem); }
+
+.challenge-zone {
+  flex: 1 1 0;
+  gap: clamp(3px, 0.9dvh, 8px);
+  padding: 6px 12px 8px;
+}
+.challenge-zone > * { flex-shrink: 0; }
+.fila-centrada { margin-left: auto; }
+.word-problem { font-size: 0.82rem; line-height: 1.25; padding: 5px 8px; }
+.answer-btn { min-height: clamp(44px, 7.4dvh, 64px); padding: 4px 6px; gap: 2px; }
+.ai-response { font-size: 0.8rem; min-height: 2.6em; line-height: 1.25; padding: 4px 8px; }
+.level-badge { padding: 5px 12px; }
+
+/* Primer paso: se va lo que acompaña, no lo que se cuenta */
+.challenge-zone.compacto .challenge-title,
+.challenge-zone.compacto .subtraction-caption,
+.challenge-zone.compacto .answer-dots { display: none; }
+.challenge-zone.compacto .dot { width: 6px; height: 6px; }
+.challenge-zone.compacto .big-number,
+.challenge-zone.compacto .math-operator,
+.challenge-zone.compacto .math-unknown { font-size: clamp(1.6rem, 5.4dvh, 2rem); }
+.challenge-zone.compacto .word-problem { font-size: 0.78rem; padding: 4px 8px; }
+/* Último paso: números sin dibujo, pero la cuenta y las respuestas siempre */
+.challenge-zone.minimo .dot-grid,
+.challenge-zone.minimo .filas-puntos,
+.challenge-zone.minimo .grupos-reparto { display: none; }
+
+/* Celular angosto: el nombre del nivel no entra al lado de los botones */
+@media (max-width: 420px) {
+  .level-badge .nivel-nombre { display: none; }
 }
 
 /* ═══════════════════════════════════════

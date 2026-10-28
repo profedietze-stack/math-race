@@ -9,6 +9,7 @@ window.addEventListener('load', () => {
   try { applyStoredA11ySettings(); } catch (e) { console.warn('a11y settings falló', e); }
   try { updateProfileBadge(); } catch (e) { console.warn('profile badge falló', e); }
   try { syncMusicButtons(); } catch (e) { console.warn('botones de música fallaron', e); }
+  try { iniciarAjusteAlto(); } catch (e) { console.warn('ajuste de alto falló', e); }
 
   // Start menu music on first user interaction (autoplay policy)
   const startAudioOnce = async () => {
