@@ -1610,6 +1610,67 @@ body.a11y-contrast .lane {
 }
 
 /* ═══════════════════════════════════════
+   MENÚ SIN SCROLL
+   Título, botones y créditos se reparten el alto de la pantalla (dvh). En un
+   celular de 320×568 el menú se pasaba 117 px. El margen de arriba sigue
+   dejando lugar a los botones flotantes de música y accesibilidad.
+   El scroll de #homeScreen queda solo como último recurso para pantallas
+   más chicas que las medidas (< 480 px de alto).
+   ═══════════════════════════════════════ */
+.home-title-line1 { font-size: clamp(2.4rem, min(14vw, 7.5dvh), 6rem); }
+.home-title-line2 { font-size: clamp(2.7rem, min(16vw, 8.5dvh), 7rem); margin-top: -6px; }
+.profile-pill { margin-top: 4px; }
+.home-panel {
+  padding: clamp(8px, 2dvh, 20px) clamp(16px, 5vw, 28px) clamp(10px, 2.5dvh, 30px);
+  gap: clamp(6px, 1.3dvh, 13px);
+}
+.menu-btn { padding: clamp(9px, 1.7dvh, 17px) 16px; gap: 12px; }
+.menu-btn-small { padding: clamp(8px, 1.5dvh, 14px) 10px; min-height: 44px; }
+@media (max-width: 520px) {
+  /* 58 = alto de los botones flotantes (top 14 + 44): el título empieza debajo */
+  .home-hero { padding-top: clamp(58px, 9dvh, 64px); }
+}
+/* Celular bajo (320×568, 320×480): «MATH RACE» en una sola línea */
+@media (max-height: 600px) and (orientation: portrait) {
+  .home-title-wrap { flex-direction: row; align-items: baseline; gap: 10px; }
+  .home-title-line2 { margin-top: 0; }
+  .home-title-line1, .home-title-line2 { font-size: clamp(2.2rem, 12vw, 3rem); }
+}
+@media (max-height: 540px) and (orientation: portrait) {
+  .home-subtitle, .home-divider { display: none; }
+}
+@media (max-width: 360px) {
+  .menu-btn-small { padding-left: 6px; padding-right: 6px; gap: 6px; } /* «Desafío Diario» en una línea */
+}
+/* Alto de celular: los botones chicos se ponen de costado (ícono + nombre) */
+@media (max-height: 700px) and (orientation: portrait) {
+  .menu-btn-small { flex-direction: row; gap: 8px; }
+  .menu-btn-small .icon { font-size: 1.15rem; }
+}
+
+/* Celular apaisado: título a la izquierda, botones a la derecha */
+@media (orientation: landscape) and (max-height: 500px) {
+  #homeScreen.active {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+  }
+  #homeScreen .home-hero { padding-top: 0; }
+  #homeScreen .home-divider { display: none; }
+  #homeScreen .home-panel {
+    flex: none;
+    justify-content: center;
+    padding: 52px 20px 6px 8px; /* 52 = lugar de los botones flotantes */
+    gap: 6px;
+  }
+  #homeScreen .menu-btn { padding: 4px 14px; min-height: 44px; }
+  #homeScreen .menu-btn-small { flex-direction: row; gap: 8px; padding: 4px 8px; }
+  #homeScreen .menu-btn-small .icon { font-size: 1.1rem; }
+  #homeScreen .menu-btn .btn-icon { font-size: 1.3rem; }
+  #homeScreen .menu-row { gap: 6px; }
+}
+
+/* ═══════════════════════════════════════
    COMPONENTES CHICOS (antes eran style="" sueltos en el HTML y los .js)
    ═══════════════════════════════════════ */
 :root {
